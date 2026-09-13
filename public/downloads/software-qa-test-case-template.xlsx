@@ -1,0 +1,13 @@
+"Test ID","Requirement","Test Scenario","Test Steps","Expected Result","Actual Result","Status","Priority","Defect Reference"
+"TC-001","REQ-AUTH-01","Verify successful user login with valid credentials","1. Navigate to login page
+2. Enter valid email and password
+3. Click Login","User is redirected to Dashboard with active session token","As expected. Redirected to /dashboard","Passed","High","None"
+"TC-002","REQ-AUTH-02","Verify login validation error with incorrect password","1. Enter valid email
+2. Enter invalid password
+3. Click Login","Error message ""Invalid credentials"" displayed, password field cleared","As expected. Inline red error shown","Passed","High","None"
+"TC-003","REQ-DATA-04","Verify export functionality for 10,000+ records","1. Open analytics table
+2. Select CSV Export
+3. Confirm download completes within 3s","CSV file generated with all 10,000 rows without memory leak or timeout","File generated in 1.8s. All records intact","Passed","Medium","None"
+"TC-004","REQ-CHECK-08","Verify defect logging webhook trigger on test failure","1. Execute automated regression suite
+2. Inject failed assertion
+3. Check Jira ticket creation","Automated bug ticket created in Jira with stacktrace attachment","Ticket created successfully with full trace","Passed","Critical","None"

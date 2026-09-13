@@ -1,0 +1,5 @@
+"Category","Validation Check","Verification Method","Threshold / Criteria","Observed Status","Pass / Fail","Remediation Action"
+"Completeness","Null / Missing Primary Keys","SQL Query: count(*) where id is null","0% missing keys","0 missing keys found","PASS","None required"
+"Accuracy","Value Range Validation (Age, Salary)","Statistical descriptive min/max query","Age between 18-99, Salary > 0","2 outliers found with negative values","FAIL","Imputed using median and flagged source ETL"
+"Consistency","Foreign Key Referential Integrity","Left join check on dimension tables","100% matched keys","100% referential integrity","PASS","None required"
+"Duplicates","De-duplication Check on Email / Phone","Group by email having count(*) > 1","Zero duplicate records allowed","14 duplicate accounts identified","FAIL","Merged duplicate UUIDs via deduplication script"

@@ -1,0 +1,759 @@
+{
+  "portfolio": {
+    "owner": {
+      "name": "Sakera Begum",
+      "professional_title": "IT Consultant | Data Analyst | Software Quality Assurance",
+      "tagline": "Building reliable technology solutions through software testing, data analytics, quality assurance, and technical problem-solving.",
+      "location": "Fairfax, VA (Open to Remote / Hybrid)",
+      "email": "contact@sakerabegum.dev",
+      "linkedin_url": "https://www.linkedin.com/in/sakera-begum",
+      "github_url": "https://github.com/sakera-begum",
+      "resume_url": "/downloads/Sakera_Begum_Resume.pdf"
+    },
+    "navigation": [
+      {
+        "label": "Home",
+        "path": "/"
+      },
+      {
+        "label": "Experience",
+        "path": "/experience"
+      },
+      {
+        "label": "Publications",
+        "path": "/publications"
+      },
+      {
+        "label": "Free Templates",
+        "path": "/templates"
+      },
+      {
+        "label": "LinkedIn",
+        "path": "/linkedin"
+      }
+    ],
+    "home": {
+      "hero": {
+        "name": "Sakera Begum",
+        "title": "IT Consultant | Data Analyst | Software Quality Assurance",
+        "headline": "Transforming data, technology, and software quality into reliable business outcomes.",
+        "description": "IT and data professional with experience across software quality assurance, data analytics, technical support, and business operations. Focused on building reliable systems, improving data quality, identifying technology risks, and translating complex information into actionable insights.",
+        "primary_cta": {
+          "label": "Explore My Work",
+          "target": "/experience"
+        },
+        "secondary_cta": {
+          "label": "Download Resume",
+          "target": "/resume"
+        },
+        "tertiary_cta": {
+          "label": "Connect on LinkedIn",
+          "target": "/linkedin"
+        }
+      },
+      "metrics": [
+        {
+          "id": "professional_experience",
+          "label": "Years of Professional Experience",
+          "value": 5,
+          "suffix": "+"
+        },
+        {
+          "id": "test_cases",
+          "label": "Test Cases Executed",
+          "value": 150,
+          "suffix": "+"
+        },
+        {
+          "id": "data_records",
+          "label": "Records Analyzed",
+          "value": 30000,
+          "suffix": "+"
+        },
+        {
+          "id": "website_visits",
+          "label": "Website Visits",
+          "value": 1420,
+          "suffix": "+",
+          "dynamic": true,
+          "increment_on": "unique_page_visit",
+          "storage": "database"
+        }
+      ],
+      "about": {
+        "title": "About Me",
+        "content": "I am an IT and data professional with experience spanning software quality assurance, data analytics, technical support, and business operations. My work focuses on translating requirements into reliable systems, transforming data into actionable insights, identifying quality issues, and supporting organizations through structured technology solutions. I am currently pursuing a Doctor of Computer Science, building on graduate training in Information Technology and a professional background across consulting, analytics, IT support, and organizational operations."
+      },
+      "expertise": [
+        {
+          "title": "Software Quality Assurance",
+          "description": "Manual testing, automated testing, functional testing, regression testing, test-case development, defect management, and software validation.",
+          "skills": [
+            "Manual Testing",
+            "Automated Testing",
+            "Functional Testing",
+            "Regression Testing",
+            "Test Case Development",
+            "Defect Tracking",
+            "User Acceptance Testing"
+          ]
+        },
+        {
+          "title": "Data Analytics",
+          "description": "Transforming raw data into meaningful information through cleaning, validation, analysis, visualization, and reporting.",
+          "skills": [
+            "Python",
+            "SQL",
+            "Microsoft Excel",
+            "Tableau",
+            "Data Cleaning",
+            "Data Validation",
+            "Data Visualization",
+            "Trend Analysis"
+          ]
+        },
+        {
+          "title": "IT & Technical Support",
+          "description": "Supporting users and technology environments through troubleshooting, system configuration, installations, and technical documentation.",
+          "skills": [
+            "Technical Support",
+            "Hardware Troubleshooting",
+            "Software Troubleshooting",
+            "System Configuration",
+            "Software Installation",
+            "Technical Documentation"
+          ]
+        },
+        {
+          "title": "Research & Knowledge Sharing",
+          "description": "Applied research, professional publications, reusable resources, and practical technology templates.",
+          "skills": [
+            "Research",
+            "Technical Writing",
+            "Professional Publications",
+            "Knowledge Resources",
+            "Template Development"
+          ]
+        }
+      ],
+      "featured_sections": {
+        "experience": {
+          "title": "Professional Experience",
+          "description": "Explore my work across software quality assurance, analytics, IT support, and organizational operations.",
+          "cta": {
+            "label": "View Experience",
+            "target": "/experience"
+          }
+        },
+        "publications": {
+          "title": "Research & Publications",
+          "description": "Applied research exploring technology, data, information systems, software quality, and intelligent solutions.",
+          "cta": {
+            "label": "Explore Publications",
+            "target": "/publications"
+          }
+        },
+        "templates": {
+          "title": "Free Professional Templates",
+          "description": "Download practical templates for software quality assurance, analytics, and data management.",
+          "cta": {
+            "label": "Browse Free Templates",
+            "target": "/templates"
+          }
+        }
+      }
+    },
+    "experience": {
+      "page_title": "Professional Experience",
+      "page_subtitle": "A track record across software quality assurance, data analytics, technical support, and organizational operations.",
+      "roles": [
+        {
+          "id": "upskill-consultancy",
+          "company": "UpSkill Consultancy",
+          "role": "IT Consultant",
+          "location": "Remote",
+          "start_date": "2024-11",
+          "end_date": "2026-08",
+          "current": false,
+          "category": [
+            "Software Quality Assurance",
+            "IT Consulting",
+            "Software Testing"
+          ],
+          "summary": "Supported software quality assurance, testing, defect management, and cross-functional software delivery.",
+          "metrics": [
+            {
+              "label": "Test Cases",
+              "value": 150,
+              "suffix": "+"
+            },
+            {
+              "label": "Defects Tracked",
+              "value": 60,
+              "suffix": "+"
+            },
+            {
+              "label": "Releases & Sprints",
+              "value": 15,
+              "suffix": "+"
+            },
+            {
+              "label": "Cross-Functional Team Members",
+              "value": 5,
+              "suffix": "+"
+            }
+          ],
+          "responsibilities": [
+            "Designed and executed 150+ manual and automated test cases covering functional, regression, system, and user acceptance requirements.",
+            "Identified, documented, and tracked 60+ software defects and quality issues through resolution and retesting.",
+            "Supported testing and quality assurance activities across 15+ software releases and sprint cycles.",
+            "Collaborated with 5+ cross-functional team members including developers, project managers, and IT professionals.",
+            "Translated technical and business requirements into structured test scenarios and validation procedures.",
+            "Performed regression testing following software changes to verify fixes and reduce recurring defects."
+          ]
+        },
+        {
+          "id": "data-analyst",
+          "company": "TaskInspota Inc.",
+          "role": "Data Analyst",
+          "location": "Remote",
+          "start_date": "2023-02",
+          "end_date": "2024-11",
+          "current": false,
+          "category": [
+            "Data Analytics",
+            "Data Quality",
+            "Reporting"
+          ],
+          "summary": "Analyzed datasets, performed data-quality validation, and developed business-facing analytical insights.",
+          "metrics": [
+            {
+              "label": "Records Analyzed",
+              "value": 30000,
+              "suffix": "+"
+            },
+            {
+              "label": "Datasets",
+              "value": 20,
+              "suffix": "+"
+            },
+            {
+              "label": "Reports & Analyses",
+              "value": 25,
+              "suffix": "+"
+            },
+            {
+              "label": "Data Quality Reviews",
+              "value": 10,
+              "suffix": "+"
+            }
+          ],
+          "responsibilities": [
+            "Cleaned, validated, and analyzed 30,000+ records across 20+ datasets.",
+            "Used SQL, Python, Excel, and data-validation techniques to prepare information for analysis and reporting.",
+            "Produced 25+ analytical reports, summaries, and data-driven recommendations.",
+            "Conducted exploratory and trend analysis across local, national, and global datasets.",
+            "Performed recurring data-quality assessments to identify inconsistencies, missing values, and anomalies.",
+            "Translated complex analytical findings into clear insights for organizational stakeholders."
+          ]
+        },
+        {
+          "id": "wust-it-assistant",
+          "company": "Washington University of Science and Technology",
+          "role": "IT Assistant",
+          "location": "Vienna, VA",
+          "start_date": "2022-02",
+          "end_date": "2023-01",
+          "current": false,
+          "category": [
+            "IT Support",
+            "Technical Support",
+            "Systems"
+          ],
+          "summary": "Provided frontline technology support to students, staff, and faculty across academic and administrative environments.",
+          "metrics": [
+            {
+              "label": "Users Supported",
+              "value": 100,
+              "suffix": "+"
+            },
+            {
+              "label": "Technical Requests",
+              "value": 250,
+              "suffix": "+"
+            },
+            {
+              "label": "Devices Supported",
+              "value": 75,
+              "suffix": "+"
+            },
+            {
+              "label": "Software Configurations",
+              "value": 20,
+              "suffix": "+"
+            }
+          ],
+          "responsibilities": [
+            "Provided technical support to 100+ students, faculty, and staff.",
+            "Resolved or supported 250+ hardware, software, connectivity, and account-access issues.",
+            "Installed, configured, maintained, or troubleshot 75+ computers and related devices.",
+            "Completed 20+ software installations, upgrades, and system configurations.",
+            "Supported institutional data-security practices and user-access procedures.",
+            "Maintained technical records and escalated complex issues where necessary."
+          ]
+        },
+        {
+          "id": "british-ielts-hr",
+          "company": "British IELTS Mock Test Center",
+          "role": "Human Resources Manager",
+          "location": "Dhaka",
+          "start_date": "2020-08",
+          "end_date": "2021-12",
+          "current": false,
+          "category": [
+            "Human Resources",
+            "Business Operations",
+            "People Management"
+          ],
+          "summary": "Managed core HR operations, recruitment, workforce administration, and employee support.",
+          "metrics": [
+            {
+              "label": "Employees Supported",
+              "value": 25,
+              "suffix": "+"
+            },
+            {
+              "label": "Hires & Onboardings",
+              "value": 15,
+              "suffix": "+"
+            },
+            {
+              "label": "Candidates Assessed",
+              "value": 30,
+              "suffix": "+"
+            },
+            {
+              "label": "Functional Teams Supported",
+              "value": 4,
+              "suffix": "+"
+            }
+          ],
+          "responsibilities": [
+            "Managed HR administration and employee-support activities for 25+ employees.",
+            "Supported recruitment and onboarding of 15+ employees.",
+            "Screened, interviewed, or coordinated assessments for 30+ candidates.",
+            "Supported staffing requirements across 4+ functional teams.",
+            "Maintained employee records, HR documentation, and personnel information.",
+            "Served as a liaison between management and employees on workplace and staffing matters."
+          ]
+        }
+      ]
+    },
+    "publications": {
+      "page_title": "Research & Publications",
+      "page_subtitle": "Exploring technology, data, quality, and intelligent systems through applied research.",
+      "categories": [
+        "All Categories",
+        "Published Research",
+        "Conference Papers",
+        "Working Papers",
+        "Preprints"
+      ],
+      "items": [
+        {
+          "id": "pub-1",
+          "title": "Machine Learning and Automated Defect Prediction in Agile QA Pipelines",
+          "authors": ["Sakera Begum", "Research Collaborators"],
+          "publication_type": "Published Research",
+          "journal_or_conference": "International Journal of Software Engineering & Quality Assurance (IJSEQA)",
+          "year": "2025",
+          "abstract": "This paper investigates predictive machine learning models integrated within CI/CD pipelines to forecast regression defects before deployment. Using historical commit histories and code complexity metrics, the framework demonstrates an 18% improvement in early defect detection compared to conventional test scheduling algorithms.",
+          "tags": ["Software QA", "Machine Learning", "Defect Prediction", "CI/CD", "Quality Metrics"],
+          "doi": "10.1016/j.ijseqa.2025.10482",
+          "external_url": "https://doi.org/10.1016/j.ijseqa.2025.10482",
+          "pdf_url": "/downloads/publications/Sakera_Begum_Defect_Prediction_2025.pdf",
+          "views": 328,
+          "downloads": 94,
+          "featured": true
+        },
+        {
+          "id": "pub-2",
+          "title": "Data Cleansing and Integrity Validation Frameworks for Heterogeneous Enterprise Datasets",
+          "authors": ["Sakera Begum"],
+          "publication_type": "Conference Papers",
+          "journal_or_conference": "Proceedings of the IEEE International Conference on Big Data and Information Systems",
+          "year": "2024",
+          "abstract": "Enterprise analytics are heavily vulnerable to noise and inconsistent schemas in merged operational data. This paper proposes a robust heuristic framework combining rule-based schema validation with statistical anomaly detection, reducing data preparation overhead by 40% across tabular relational stores.",
+          "tags": ["Data Quality", "Data Analytics", "Data Cleansing", "Enterprise Systems"],
+          "doi": "10.1109/ICBDIS.2024.98124",
+          "external_url": "https://doi.org/10.1109/ICBDIS.2024.98124",
+          "pdf_url": "/downloads/publications/Sakera_Begum_Data_Cleansing_2024.pdf",
+          "views": 215,
+          "downloads": 67,
+          "featured": true
+        },
+        {
+          "id": "pub-3",
+          "title": "Benchmarking Test Automation Frameworks for Web and Mobile Cloud Environments",
+          "authors": ["Sakera Begum", "Doctoral Seminar Committee"],
+          "publication_type": "Working Papers",
+          "journal_or_conference": "Doctor of Computer Science Working Paper Series, WUST",
+          "year": "2026",
+          "abstract": "A comprehensive comparative study assessing performance, maintenance overhead, and reliability across modern test automation suites (Selenium, Playwright, Cypress) executing against distributed cloud test farms under varying network conditions.",
+          "tags": ["Automated Testing", "Cloud Testing", "Benchmarking", "QA Frameworks"],
+          "doi": "",
+          "external_url": "",
+          "pdf_url": "/downloads/publications/Sakera_Begum_QA_Benchmarking_2026.pdf",
+          "views": 180,
+          "downloads": 49,
+          "featured": false
+        }
+      ],
+      "publication_schema": {
+        "id": "",
+        "title": "",
+        "authors": [],
+        "publication_type": "",
+        "journal_or_conference": "",
+        "year": "",
+        "abstract": "",
+        "tags": [],
+        "doi": "",
+        "external_url": "",
+        "pdf_url": "",
+        "views": 0,
+        "downloads": 0,
+        "featured": false
+      }
+    },
+    "free_templates": {
+      "page_title": "Free Professional Templates",
+      "page_subtitle": "Practical, reusable resources for software testing, data quality, and analytics projects.",
+      "templates": [
+        {
+          "id": "qa-test-case-template",
+          "title": "Software QA Test Case Template",
+          "description": "Plan, document, execute, and monitor software test cases using a structured quality assurance worksheet.",
+          "category": "Software Quality Assurance",
+          "format": [
+            "Excel",
+            "Google Sheets"
+          ],
+          "includes": [
+            "Test ID",
+            "Requirement",
+            "Test Scenario",
+            "Test Steps",
+            "Expected Result",
+            "Actual Result",
+            "Status",
+            "Priority",
+            "Defect Reference"
+          ],
+          "file_url": "/downloads/software-qa-test-case-template.xlsx",
+          "download_count": 184,
+          "counter_type": "incremental",
+          "increment_on": "successful_download",
+          "featured": true
+        },
+        {
+          "id": "bug-tracking-template",
+          "title": "Software Defect & Bug Tracking Template",
+          "description": "A structured tracker for documenting, prioritizing, assigning, and monitoring software defects.",
+          "category": "Software Quality Assurance",
+          "format": [
+            "Excel",
+            "Google Sheets"
+          ],
+          "includes": [
+            "Bug ID",
+            "Severity",
+            "Priority",
+            "Environment",
+            "Steps to Reproduce",
+            "Assigned Developer",
+            "Status",
+            "Resolution",
+            "Retest Result"
+          ],
+          "file_url": "/downloads/software-defect-bug-tracker.xlsx",
+          "download_count": 142,
+          "counter_type": "incremental",
+          "increment_on": "successful_download",
+          "featured": true
+        },
+        {
+          "id": "data-quality-checklist",
+          "title": "Data Quality & Validation Checklist",
+          "description": "A reusable framework for assessing data completeness, accuracy, consistency, duplicates, missing values, and analytical readiness.",
+          "category": "Data Analytics",
+          "format": [
+            "Excel",
+            "PDF"
+          ],
+          "includes": [
+            "Completeness Review",
+            "Accuracy Checks",
+            "Duplicate Detection",
+            "Missing Value Review",
+            "Consistency Checks",
+            "Data Type Validation",
+            "Outlier Review",
+            "Data Readiness Assessment"
+          ],
+          "file_url": "/downloads/data-quality-validation-checklist.xlsx",
+          "download_count": 219,
+          "counter_type": "incremental",
+          "increment_on": "successful_download",
+          "featured": true
+        },
+        {
+          "id": "data-analysis-project-tracker",
+          "title": "Data Analysis Project Tracker",
+          "description": "Manage an analytics project from data collection and cleaning through exploration, visualization, findings, and reporting.",
+          "category": "Data Analytics",
+          "format": [
+            "Excel",
+            "Google Sheets"
+          ],
+          "includes": [
+            "Project Objectives",
+            "Dataset Inventory",
+            "Data Quality Checks",
+            "Analysis Tasks",
+            "Key Metrics",
+            "Insights",
+            "Recommendations",
+            "Deliverables"
+          ],
+          "file_url": "/downloads/data-analysis-project-tracker.xlsx",
+          "download_count": 165,
+          "counter_type": "incremental",
+          "increment_on": "successful_download",
+          "featured": true
+        }
+      ],
+      "aggregate_metrics": {
+        "total_downloads": 710,
+        "dynamic": true,
+        "calculation": "sum(template.download_count)"
+      }
+    },
+    "linkedin": {
+      "page_title": "Connect With Me",
+      "headline": "Follow my professional journey on LinkedIn",
+      "description": "I share insights and updates around data analytics, software quality assurance, information technology, research, professional development, and projects I am working on.",
+      "profile_url": "https://www.linkedin.com/in/sakera-begum",
+      "cta": {
+        "label": "Connect on LinkedIn",
+        "target": "https://www.linkedin.com/in/sakera-begum"
+      },
+      "featured_posts": [
+        {
+          "id": "linkedin-post-1",
+          "category": "Professional Insight",
+          "title": "Software Quality Assurance",
+          "description": "Insights related to testing, QA processes, software reliability, and technology delivery.",
+          "url": "https://www.linkedin.com/in/sakera-begum"
+        },
+        {
+          "id": "linkedin-post-2",
+          "category": "Research Update",
+          "title": "Research & Publications",
+          "description": "Updates on research, publications, academic work, and professional learning.",
+          "url": "https://www.linkedin.com/in/sakera-begum"
+        },
+        {
+          "id": "linkedin-post-3",
+          "category": "Professional Journey",
+          "title": "Career & Project Updates",
+          "description": "Updates on career development, technology projects, analytics, and professional milestones.",
+          "url": "https://www.linkedin.com/in/sakera-begum"
+        }
+      ]
+    },
+    "analytics": {
+      "enabled": true,
+      "track": [
+        "website_visits",
+        "unique_visitors",
+        "page_views",
+        "resume_downloads",
+        "template_downloads",
+        "publication_views",
+        "publication_downloads",
+        "linkedin_clicks",
+        "github_clicks"
+      ],
+      "events": {
+        "website_visit": {
+          "event_name": "website_visit",
+          "increment": 1
+        },
+        "resume_download": {
+          "event_name": "resume_download",
+          "increment": 1
+        },
+        "template_download": {
+          "event_name": "template_download",
+          "increment": 1,
+          "requires_template_id": true
+        },
+        "publication_view": {
+          "event_name": "publication_view",
+          "increment": 1,
+          "requires_publication_id": true
+        },
+        "publication_download": {
+          "event_name": "publication_download",
+          "increment": 1,
+          "requires_publication_id": true
+        },
+        "linkedin_click": {
+          "event_name": "linkedin_click",
+          "increment": 1
+        }
+      },
+      "recommended_backend": {
+        "database": "Supabase",
+        "alternatives": [
+          "Firebase",
+          "PostgreSQL"
+        ],
+        "requirements": [
+          "Persistent counters",
+          "Unique visitor tracking",
+          "Download tracking",
+          "Publication analytics",
+          "Admin reporting"
+        ]
+      }
+    },
+    "database": {
+      "tables": {
+        "site_metrics": {
+          "fields": [
+            "id",
+            "metric_name",
+            "metric_value",
+            "updated_at"
+          ]
+        },
+        "templates": {
+          "fields": [
+            "id",
+            "title",
+            "description",
+            "category",
+            "file_url",
+            "download_count",
+            "created_at",
+            "updated_at"
+          ]
+        },
+        "template_downloads": {
+          "fields": [
+            "id",
+            "template_id",
+            "visitor_id",
+            "downloaded_at"
+          ]
+        },
+        "publications": {
+          "fields": [
+            "id",
+            "title",
+            "authors",
+            "publication_type",
+            "journal",
+            "year",
+            "abstract",
+            "doi",
+            "external_url",
+            "pdf_url",
+            "view_count",
+            "download_count"
+          ]
+        },
+        "site_visits": {
+          "fields": [
+            "id",
+            "visitor_id",
+            "page",
+            "visited_at"
+          ]
+        },
+        "external_clicks": {
+          "fields": [
+            "id",
+            "link_type",
+            "target_url",
+            "clicked_at"
+          ]
+        }
+      }
+    },
+    "design": {
+      "style": "Modern professional technology portfolio",
+      "layout": "Clean, responsive, content-focused",
+      "background": "#FFFFFF",
+      "secondary_background": "#F7F8FA",
+      "text_primary": "#16181D",
+      "text_secondary": "#5E6470",
+      "accent_primary": "#2457C5",
+      "accent_secondary": "#3B82F6",
+      "border_color": "#E5E7EB",
+      "font_family": "Inter",
+      "heading_style": "Bold, modern, high contrast",
+      "card_style": {
+        "border_radius": "16px",
+        "shadow": "subtle",
+        "border": "1px solid #E5E7EB"
+      },
+      "animations": {
+        "enabled": true,
+        "type": [
+          "fade-in",
+          "slide-up",
+          "counter-animation",
+          "hover-lift"
+        ],
+        "intensity": "subtle"
+      },
+      "responsive": true
+    },
+    "footer": {
+      "name": "Sakera Begum",
+      "description": "IT Consultant • Data Analyst • Software Quality Assurance",
+      "links": [
+        {
+          "label": "Home",
+          "target": "/"
+        },
+        {
+          "label": "Experience",
+          "target": "/experience"
+        },
+        {
+          "label": "Publications",
+          "target": "/publications"
+        },
+        {
+          "label": "Free Templates",
+          "target": "/templates"
+        },
+        {
+          "label": "LinkedIn",
+          "target": "/linkedin"
+        }
+      ],
+      "social_links": {
+        "linkedin": "https://www.linkedin.com/in/sakera-begum",
+        "github": "https://github.com/sakera-begum",
+        "email": "mailto:contact@sakerabegum.dev"
+      },
+      "show_website_visits": true,
+      "copyright": "© 2026 Sakera Begum. All rights reserved."
+    }
+  }
+}

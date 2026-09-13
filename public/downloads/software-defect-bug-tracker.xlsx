@@ -1,0 +1,7 @@
+"Bug ID","Severity","Priority","Environment","Steps to Reproduce","Assigned Developer","Status","Resolution","Retest Result"
+"BUG-101","Critical","High","Staging (Chrome 122)","1. Click ""Export Data""
+2. Rapidly double-click submit button","John D. (Backend)","Resolved","Added idempotency key & button debounce","Verified Fix - No duplicate calls"
+"BUG-102","Major","Medium","Production (Safari / iOS)","1. Open profile dropdown on mobile view
+2. Backdrop fails to dismiss","Sarah K. (Frontend)","In Progress","Refactoring z-index stacking context","Pending Deploy"
+"BUG-103","Minor","Low","All Environments","1. Hover over tooltip in metrics card
+2. Text alignment misaligned by 2px","Alex R. (UI/UX)","Closed","Adjusted CSS flex layout padding","Verified Fix"
