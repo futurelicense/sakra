@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { Mail, Eye, ShieldCheck, Heart } from 'lucide-react'
+import { Eye, ShieldCheck, Mail, ArrowUpRight, CheckCircle2 } from 'lucide-react'
 import { LinkedinIcon, GithubIcon } from '@/components/Icons'
 import portfolioData from '@/data/portfolio.json'
 
@@ -22,45 +22,45 @@ export function Footer() {
   }, [])
 
   return (
-    <footer className="bg-gray-900 text-gray-300 border-t border-gray-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-12">
-          {/* Column 1: Info */}
+    <footer className="mt-20 border-t border-border bg-background/90 relative z-10">
+      <div className="max-w-6xl mx-auto px-5 py-12 md:px-8 md:py-16">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 lg:gap-12 pb-12 border-b border-border/60">
+          {/* Column 1: Identity & Telemetry */}
           <div className="md:col-span-2 space-y-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-9 h-9 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-base">
-                SB
-              </div>
-              <span className="text-xl font-bold text-white tracking-tight">{footer.name}</span>
+            <div className="flex items-center space-x-2.5">
+              <span className="font-display text-xl font-bold text-foreground">
+                {footer.name}
+              </span>
+              <span className="h-1.5 w-1.5 rounded-full bg-signal animate-pulse-node"></span>
             </div>
-            <p className="text-gray-400 text-sm max-w-md leading-relaxed">
+            <p className="text-muted text-sm max-w-md leading-relaxed">
               {footer.description}
             </p>
-            <p className="text-xs text-gray-500 leading-relaxed max-w-md">
-              Specialized in manual & automated software quality assurance, relational data validation, defect management, and business operations.
+            <p className="text-xs text-muted-dark leading-relaxed max-w-md">
+              Focusing on software quality engineering, automated test suites, relational data integrity, and doctoral research in computer science.
             </p>
 
-            {/* Live website counter badge */}
+            {/* Live website visits counter panel */}
             {footer.show_website_visits && (
-              <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-800 border border-gray-700/60 text-xs font-medium text-gray-300">
-                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <Eye className="w-3.5 h-3.5 text-blue-400" />
-                <span>Live Site Visits: <strong className="text-white">{visits.toLocaleString()}</strong></span>
+              <div className="inline-flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-panel border border-border text-xs font-medium text-foreground">
+                <span className="h-2 w-2 rounded-full bg-signal animate-pulse-node"></span>
+                <Eye className="w-3.5 h-3.5 text-primary" />
+                <span>
+                  Live visits to this site: <strong className="text-primary font-mono">{visits.toLocaleString()}</strong>
+                </span>
               </div>
             )}
           </div>
 
-          {/* Column 2: Quick Links */}
+          {/* Column 2: Navigation */}
           <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-white mb-4">
-              Navigation
-            </h4>
-            <ul className="space-y-2.5 text-sm">
+            <span className="eyebrow block mb-4">Navigation</span>
+            <ul className="space-y-2 text-sm text-muted">
               {footer.links.map((link) => (
                 <li key={link.target}>
                   <Link
                     href={link.target}
-                    className="text-gray-400 hover:text-white transition-colors"
+                    className="hover:text-primary transition-colors inline-flex items-center gap-1"
                   >
                     {link.label}
                   </Link>
@@ -69,64 +69,63 @@ export function Footer() {
               <li>
                 <Link
                   href="/resume"
-                  className="text-gray-400 hover:text-white transition-colors"
+                  className="hover:text-primary transition-colors inline-flex items-center gap-1"
                 >
-                  Resume & CV
+                  Curriculum Vitae (PDF)
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Column 3: Connect & Social */}
+          {/* Column 3: Connect */}
           <div>
-            <h4 className="text-sm font-semibold uppercase tracking-wider text-white mb-4">
-              Connect
-            </h4>
-            <ul className="space-y-3 text-sm">
+            <span className="eyebrow block mb-4">Connect</span>
+            <ul className="space-y-2.5 text-sm">
               <li>
                 <a
-                  href={footer.social_links.linkedin || '/linkedin'}
+                  href={owner.linkedin_url || '/linkedin'}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center space-x-2 text-gray-400 hover:text-blue-400 transition-colors"
+                  className="flex items-center space-x-2 text-muted hover:text-primary transition-colors"
                 >
-                  <LinkedinIcon className="w-4 h-4 text-blue-500" />
+                  <LinkedinIcon className="w-4 h-4 text-primary" />
                   <span>LinkedIn Profile</span>
                 </a>
               </li>
               <li>
                 <a
-                  href={footer.social_links.github}
+                  href={owner.github_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors"
+                  className="flex items-center space-x-2 text-muted hover:text-foreground transition-colors"
                 >
-                  <GithubIcon className="w-4 h-4 text-gray-400" />
+                  <GithubIcon className="w-4 h-4 text-muted" />
                   <span>GitHub Repository</span>
                 </a>
               </li>
               <li>
                 <a
                   href={`mailto:${owner.email}`}
-                  className="flex items-center space-x-2 text-gray-400 hover:text-white transition-colors"
+                  className="flex items-center space-x-2 text-muted hover:text-energy transition-colors"
                 >
-                  <Mail className="w-4 h-4 text-amber-400" />
-                  <span>{owner.email}</span>
+                  <Mail className="w-4 h-4 text-energy" />
+                  <span className="font-mono text-xs">{owner.email}</span>
                 </a>
               </li>
             </ul>
           </div>
         </div>
 
-        <div className="mt-12 pt-8 border-t border-gray-800 flex flex-col sm:flex-row items-center justify-between text-xs text-gray-500">
+        {/* Bottom copyright & attribution */}
+        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-muted-dark gap-3">
           <div>{footer.copyright}</div>
-          <div className="mt-3 sm:mt-0 flex items-center space-x-4">
-            <span className="flex items-center gap-1">
-              <ShieldCheck className="w-4 h-4 text-blue-500" />
-              Verified Portfolio & Metrics
+          <div className="flex items-center gap-4">
+            <span className="flex items-center gap-1 text-muted">
+              <ShieldCheck className="w-3.5 h-3.5 text-primary" />
+              Verified Telemetry & Credentials
             </span>
-            <span>•</span>
-            <span>Built with Next.js & Tailwind CSS</span>
+            <span>·</span>
+            <span className="font-mono text-[11px]">Fairfax, Virginia</span>
           </div>
         </div>
       </div>

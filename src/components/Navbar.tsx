@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { Menu, X, ArrowUpRight, ShieldCheck, Database, Terminal } from 'lucide-react'
+import { Menu, X, ArrowUpRight, ShieldCheck, Download } from 'lucide-react'
 import portfolioData from '@/data/portfolio.json'
 
 export function Navbar() {
@@ -12,78 +12,87 @@ export function Navbar() {
   const { owner, navigation } = portfolioData.portfolio
 
   return (
-    <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16 sm:h-20">
-          {/* Logo / Brand */}
-          <Link href="/" className="flex items-center space-x-3 group">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-blue-700 to-blue-500 flex items-center justify-center text-white font-bold text-lg shadow-sm shadow-blue-500/20 group-hover:scale-105 transition-transform">
-              SB
-            </div>
-            <div>
-              <div className="font-bold text-gray-900 text-lg leading-tight tracking-tight group-hover:text-blue-600 transition-colors">
-                {owner.name}
-              </div>
-              <div className="text-xs text-gray-500 font-medium">
-                IT Consultant & QA Analyst
-              </div>
-            </div>
-          </Link>
-
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center space-x-1 lg:space-x-2">
-            {navigation.map((item) => {
-              const isActive = pathname === item.path
-              return (
-                <Link
-                  key={item.path}
-                  href={item.path}
-                  className={`px-3.5 py-2 rounded-lg text-sm font-medium transition-all ${
-                    isActive
-                      ? 'bg-blue-50 text-blue-700 font-semibold'
-                      : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                  }`}
-                >
-                  {item.label}
-                </Link>
-              )
-            })}
-          </nav>
-
-          {/* Action CTAs */}
-          <div className="hidden md:flex items-center space-x-3">
-            <Link
-              href="/resume"
-              className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors"
-            >
-              Resume
-            </Link>
-            <Link
-              href="/experience"
-              className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm transition-all"
-            >
-              Explore Work
-              <ArrowUpRight className="ml-1 w-4 h-4" />
-            </Link>
+    <header className="fixed inset-x-0 top-0 z-50 border-b border-border bg-background/85 backdrop-blur-lg">
+      <nav className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3 md:px-8">
+        {/* Brand identity */}
+        <Link
+          href="/"
+          className="flex flex-col leading-tight group transition-transform duration-200"
+        >
+          <div className="flex items-center gap-2">
+            <span className="font-display text-lg font-bold text-foreground tracking-tight group-hover:text-primary transition-colors">
+              {owner.name}
+            </span>
+            <span className="inline-block w-1.5 h-1.5 rounded-full bg-signal animate-pulse-node"></span>
           </div>
+          <span className="text-xs text-muted font-medium">
+            IT Consultant · MSIT, DCS Candidate
+          </span>
+        </Link>
 
-          {/* Mobile menu button */}
-          <div className="flex md:hidden">
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              type="button"
-              className="inline-flex items-center justify-center p-2 rounded-lg text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none"
-              aria-label="Toggle navigation"
-            >
-              {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-            </button>
-          </div>
+        {/* Desktop Nav */}
+        <div className="hidden md:flex items-center gap-1 lg:gap-2">
+          {navigation.map((item) => {
+            const isActive = pathname === item.path
+            return (
+              <Link
+                key={item.path}
+                href={item.path}
+                className={`rounded-lg px-3 py-1.5 text-sm font-medium transition-all ${
+                  isActive
+                    ? 'text-primary bg-primary/10 border border-primary/20 shadow-sm'
+                    : 'text-muted hover:text-foreground hover:bg-white/5'
+                }`}
+              >
+                {item.label}
+              </Link>
+            )
+          })}
+          <a
+            href={owner.linkedin_url || '/linkedin'}
+            target="_blank"
+            rel="noreferrer noopener"
+            className="rounded-lg px-3 py-1.5 text-sm font-medium text-muted hover:text-primary hover:bg-white/5 transition-colors hidden lg:inline-flex items-center gap-1"
+          >
+            LinkedIn
+            <ArrowUpRight className="h-3.5 w-3.5" />
+          </a>
         </div>
-      </div>
 
-      {/* Mobile menu dropdown */}
+        {/* Action CTAs */}
+        <div className="hidden sm:flex items-center gap-2.5">
+          <Link
+            href="/resume"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-white/[0.04] px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wider text-muted hover:text-foreground hover:border-white/20 transition-all"
+          >
+            <Download className="w-3.5 h-3.5 text-primary" />
+            Resume
+          </Link>
+          <Link
+            href="/experience"
+            className="inline-flex items-center gap-1.5 rounded-lg btn-signal px-4 py-1.5 text-xs font-semibold uppercase tracking-wider"
+          >
+            Explore Work
+            <ArrowUpRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+
+        {/* Mobile menu button */}
+        <div className="flex md:hidden">
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            type="button"
+            className="inline-flex items-center justify-center p-2 rounded-lg text-muted hover:text-foreground hover:bg-white/5 focus:outline-none"
+            aria-label="Toggle navigation"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5 text-primary" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile dropdown */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-b border-gray-200 bg-white px-4 pt-2 pb-6 space-y-2 animate-fade-in shadow-xl">
+        <div className="md:hidden border-b border-border bg-background/95 backdrop-blur-xl px-5 pt-3 pb-6 space-y-2 animate-fade-in shadow-2xl">
           {navigation.map((item) => {
             const isActive = pathname === item.path
             return (
@@ -91,28 +100,28 @@ export function Navbar() {
                 key={item.path}
                 href={item.path}
                 onClick={() => setMobileMenuOpen(false)}
-                className={`block px-3 py-2.5 rounded-lg text-base font-medium ${
+                className={`block px-3.5 py-2.5 rounded-lg text-sm font-medium ${
                   isActive
-                    ? 'bg-blue-50 text-blue-700 font-semibold'
-                    : 'text-gray-700 hover:bg-gray-50'
+                    ? 'text-primary bg-primary/10 border border-primary/20'
+                    : 'text-muted hover:text-foreground hover:bg-white/5'
                 }`}
               >
                 {item.label}
               </Link>
             )
           })}
-          <div className="pt-4 border-t border-gray-100 flex flex-col space-y-2">
+          <div className="pt-3 border-t border-border/60 flex flex-col gap-2">
             <Link
               href="/resume"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-center w-full py-2.5 rounded-lg text-sm font-medium text-gray-700 bg-gray-100"
+              className="w-full text-center py-2.5 rounded-lg border border-border bg-white/[0.03] text-xs font-semibold uppercase tracking-wider text-foreground"
             >
-              Download Resume
+              Download Resume (PDF)
             </Link>
             <Link
               href="/experience"
               onClick={() => setMobileMenuOpen(false)}
-              className="text-center w-full py-2.5 rounded-lg text-sm font-medium text-white bg-blue-600"
+              className="w-full text-center py-2.5 rounded-lg btn-signal text-xs font-semibold uppercase tracking-wider"
             >
               Explore Work
             </Link>

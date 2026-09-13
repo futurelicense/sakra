@@ -12,14 +12,14 @@ import {
   Briefcase,
   Terminal,
   ShieldCheck,
-  Layers
+  Layers,
+  Sparkles
 } from 'lucide-react'
 import { LinkedinIcon } from '@/components/Icons'
 import portfolioData from '@/data/portfolio.json'
 
 export default function ResumePage() {
   const { owner, experience, publications, home } = portfolioData.portfolio
-  const [downloadCount, setDownloadCount] = useState<number>(135)
   const [downloadSuccess, setDownloadSuccess] = useState(false)
 
   const handleDownload = () => {
@@ -29,31 +29,34 @@ export default function ResumePage() {
       body: JSON.stringify({ event_name: 'resume_download' })
     }).catch(() => {})
 
-    setDownloadCount(prev => prev + 1)
     setDownloadSuccess(true)
     setTimeout(() => setDownloadSuccess(false), 4000)
   }
 
   return (
-    <div className="py-12 sm:py-16 lg:py-20 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+    <div className="relative overflow-hidden py-28 md:py-36 max-w-4xl mx-auto px-5 md:px-8 space-y-10">
+      {/* Background Grid */}
+      <div className="pointer-events-none absolute inset-0 tech-grid opacity-20 -z-10" />
+
       {/* Toast Notification */}
       {downloadSuccess && (
-        <div className="fixed bottom-6 right-6 z-50 bg-blue-600 text-white px-5 py-3 rounded-xl shadow-xl flex items-center gap-2 animate-fade-in">
-          <CheckCircle2 className="w-5 h-5" />
-          <span>Resume downloaded successfully!</span>
+        <div className="fixed bottom-6 right-6 z-50 bg-panel border border-signal text-foreground px-5 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 animate-fade-in backdrop-blur-xl">
+          <CheckCircle2 className="w-5 h-5 text-signal" />
+          <span className="text-sm">Curriculum Vitae downloaded successfully!</span>
         </div>
       )}
 
       {/* Header and Download Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-b border-gray-200 pb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-b border-border/70 pb-8">
         <div>
-          <span className="text-xs font-bold uppercase tracking-wider text-blue-600">
-            Curriculum Vitae & Resume
+          <span className="eyebrow inline-flex items-center gap-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-signal animate-pulse-node" />
+            Curriculum Vitae & Credentials
           </span>
-          <h1 className="text-3xl sm:text-4xl font-extrabold text-gray-900 mt-1">
+          <h1 className="font-display text-3xl sm:text-4xl font-bold text-foreground mt-1 tracking-tight">
             {owner.name}
           </h1>
-          <p className="text-base text-gray-600 mt-1">
+          <p className="text-sm sm:text-base text-muted font-mono mt-1">
             {owner.professional_title}
           </p>
         </div>
@@ -63,33 +66,33 @@ export default function ResumePage() {
             href={owner.resume_url}
             download
             onClick={handleDownload}
-            className="inline-flex items-center gap-2 px-5 py-3 rounded-xl text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 shadow-md shadow-blue-500/20 transition-all hover-lift"
+            className="inline-flex items-center gap-2 rounded-lg btn-signal h-11 px-5 text-xs font-semibold uppercase tracking-wider"
           >
             <Download className="w-4 h-4" />
-            Download Resume (PDF)
+            Download PDF
           </a>
         </div>
       </div>
 
-      {/* Clean Interactive Resume Document Preview */}
-      <div className="bg-white border border-gray-200 rounded-3xl p-8 sm:p-12 shadow-sm space-y-10 text-gray-800">
+      {/* Technical Resume Console Document */}
+      <div className="rounded-3xl panel p-8 sm:p-12 shadow-2xl space-y-10 text-foreground">
         {/* Contact Info Header */}
-        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-gray-100 pb-6 text-sm text-gray-600">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/60 pb-6 text-xs sm:text-sm font-mono text-muted">
           <div className="flex items-center gap-2">
-            <Mail className="w-4 h-4 text-blue-600" />
+            <Mail className="w-4 h-4 text-energy" />
             <span>{owner.email}</span>
           </div>
           <div className="flex items-center gap-2">
-            <MapPin className="w-4 h-4 text-blue-600" />
+            <MapPin className="w-4 h-4 text-primary" />
             <span>{owner.location}</span>
           </div>
           <div className="flex items-center gap-2">
-            <LinkedinIcon className="w-4 h-4 text-blue-600" />
+            <LinkedinIcon className="w-4 h-4 text-primary" />
             <a
               href={owner.linkedin_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-blue-600 hover:underline"
+              className="text-primary hover:underline"
             >
               linkedin.com/in/sakera-begum
             </a>
@@ -98,69 +101,69 @@ export default function ResumePage() {
 
         {/* Executive Summary */}
         <section className="space-y-3">
-          <h2 className="text-lg font-bold uppercase tracking-wider text-blue-900 border-b border-blue-100 pb-1 flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-blue-600" />
+          <h2 className="text-sm font-mono uppercase tracking-wider text-primary border-b border-border/60 pb-1.5 flex items-center gap-2">
+            <ShieldCheck className="w-4 h-4 text-primary" />
             Executive Summary
           </h2>
-          <p className="text-sm leading-relaxed text-gray-700">
+          <p className="text-sm sm:text-base leading-relaxed text-muted">
             {home.about.content}
           </p>
         </section>
 
         {/* Education & Academic Credentials */}
         <section className="space-y-4">
-          <h2 className="text-lg font-bold uppercase tracking-wider text-blue-900 border-b border-blue-100 pb-1 flex items-center gap-2">
-            <GraduationCap className="w-4 h-4 text-blue-600" />
+          <h2 className="text-sm font-mono uppercase tracking-wider text-primary border-b border-border/60 pb-1.5 flex items-center gap-2">
+            <GraduationCap className="w-4 h-4 text-primary" />
             Education & Doctoral Studies
           </h2>
           <div className="space-y-3 text-sm">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 rounded-xl bg-white/[0.02] border border-border/40">
               <div>
-                <strong className="text-gray-900 text-base">Doctor of Computer Science (DCS)</strong>
-                <div className="text-gray-600">Washington University of Science and Technology (WUST)</div>
+                <strong className="text-foreground text-base font-display">Doctor of Computer Science (DCS)</strong>
+                <div className="text-muted text-xs font-mono">Washington University of Science and Technology (WUST)</div>
               </div>
-              <span className="text-xs font-semibold px-2.5 py-1 rounded bg-blue-50 text-blue-700 mt-1 sm:mt-0 w-fit">
+              <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded bg-primary/10 text-primary border border-primary/20 mt-2 sm:mt-0 w-fit">
                 In Progress (Expected 2026/2027)
               </span>
             </div>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between pt-2">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 rounded-xl bg-white/[0.02] border border-border/40">
               <div>
-                <strong className="text-gray-900 text-base">Master of Science in Information Technology (MSIT)</strong>
-                <div className="text-gray-600">Washington University of Science and Technology (WUST)</div>
+                <strong className="text-foreground text-base font-display">Master of Science in Information Technology (MSIT)</strong>
+                <div className="text-muted text-xs font-mono">Washington University of Science and Technology (WUST)</div>
               </div>
-              <span className="text-xs text-gray-500 mt-1 sm:mt-0">Graduated</span>
+              <span className="text-xs font-mono text-muted mt-2 sm:mt-0">Graduated</span>
             </div>
           </div>
         </section>
 
         {/* Core Competencies & Skills */}
         <section className="space-y-3">
-          <h2 className="text-lg font-bold uppercase tracking-wider text-blue-900 border-b border-blue-100 pb-1 flex items-center gap-2">
-            <Terminal className="w-4 h-4 text-blue-600" />
+          <h2 className="text-sm font-mono uppercase tracking-wider text-primary border-b border-border/60 pb-1.5 flex items-center gap-2">
+            <Terminal className="w-4 h-4 text-primary" />
             Technical Skills & Competencies
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-            <div className="p-3 bg-gray-50 rounded-xl border border-gray-100">
-              <strong className="text-gray-900 block mb-1">Software QA & Testing:</strong>
-              <span className="text-gray-600">
-                Manual Testing, Automated Testing, Regression Testing, Test Scenario & Matrix Design, Defect Tracking, UAT, JIRA, Bugzilla
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
+            <div className="p-4 rounded-xl bg-white/[0.02] border border-border/50">
+              <strong className="text-foreground block mb-1 font-mono uppercase text-xs text-primary">Software QA & Testing:</strong>
+              <span className="text-muted leading-relaxed">
+                Manual Testing, Automated Testing, Regression Testing, Test Scenario & Matrix Design, Defect Tracking, UAT, JIRA, Selenium, Playwright
               </span>
             </div>
-            <div className="p-3 bg-gray-50 rounded-xl border border-gray-100">
-              <strong className="text-gray-900 block mb-1">Data & Analytics:</strong>
-              <span className="text-gray-600">
+            <div className="p-4 rounded-xl bg-white/[0.02] border border-border/50">
+              <strong className="text-foreground block mb-1 font-mono uppercase text-xs text-primary">Data & Analytics:</strong>
+              <span className="text-muted leading-relaxed">
                 SQL, Python, Advanced Microsoft Excel, Tableau, Data Cleansing, Schema Validation, Statistical Anomaly Detection
               </span>
             </div>
-            <div className="p-3 bg-gray-50 rounded-xl border border-gray-100">
-              <strong className="text-gray-900 block mb-1">IT Systems & Support:</strong>
-              <span className="text-gray-600">
+            <div className="p-4 rounded-xl bg-white/[0.02] border border-border/50">
+              <strong className="text-foreground block mb-1 font-mono uppercase text-xs text-primary">IT Systems & Support:</strong>
+              <span className="text-muted leading-relaxed">
                 Hardware & Software Troubleshooting, Network Configuration, User Access Controls, Windows/Linux Environments
               </span>
             </div>
-            <div className="p-3 bg-gray-50 rounded-xl border border-gray-100">
-              <strong className="text-gray-900 block mb-1">Operations & Research:</strong>
-              <span className="text-gray-600">
+            <div className="p-4 rounded-xl bg-white/[0.02] border border-border/50">
+              <strong className="text-foreground block mb-1 font-mono uppercase text-xs text-primary">Operations & Research:</strong>
+              <span className="text-muted leading-relaxed">
                 Cross-Functional Team Collaboration, Technical Documentation, Scientific Peer-Reviewed Research Writing
               </span>
             </div>
@@ -169,27 +172,27 @@ export default function ResumePage() {
 
         {/* Professional Experience */}
         <section className="space-y-6">
-          <h2 className="text-lg font-bold uppercase tracking-wider text-blue-900 border-b border-blue-100 pb-1 flex items-center gap-2">
-            <Briefcase className="w-4 h-4 text-blue-600" />
+          <h2 className="text-sm font-mono uppercase tracking-wider text-primary border-b border-border/60 pb-1.5 flex items-center gap-2">
+            <Briefcase className="w-4 h-4 text-primary" />
             Work History
           </h2>
           <div className="space-y-6">
             {experience.roles.map((role) => (
-              <div key={role.id} className="space-y-2">
+              <div key={role.id} className="space-y-2 border-l-2 border-primary/40 pl-4 py-1">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                   <div>
-                    <h3 className="font-bold text-gray-950 text-base">
-                      {role.role} — <span className="text-blue-700">{role.company}</span>
+                    <h3 className="font-display font-bold text-foreground text-base">
+                      {role.role} — <span className="text-primary font-normal">{role.company}</span>
                     </h3>
                   </div>
-                  <span className="text-xs font-medium text-gray-500">
+                  <span className="text-xs font-mono text-muted">
                     {role.start_date} – {role.end_date} {role.location && `(${role.location})`}
                   </span>
                 </div>
-                <p className="text-xs text-gray-600 italic">
+                <p className="text-xs text-muted/80 italic font-mono">
                   {role.summary}
                 </p>
-                <ul className="list-disc list-inside space-y-1 text-xs sm:text-sm text-gray-600 leading-relaxed">
+                <ul className="list-disc list-inside space-y-1 text-xs sm:text-sm text-muted leading-relaxed">
                   {role.responsibilities.slice(0, 3).map((r, i) => (
                     <li key={i}>{r}</li>
                   ))}
@@ -201,16 +204,16 @@ export default function ResumePage() {
 
         {/* Selected Publications */}
         <section className="space-y-3">
-          <h2 className="text-lg font-bold uppercase tracking-wider text-blue-900 border-b border-blue-100 pb-1 flex items-center gap-2">
-            <Award className="w-4 h-4 text-blue-600" />
+          <h2 className="text-sm font-mono uppercase tracking-wider text-primary border-b border-border/60 pb-1.5 flex items-center gap-2">
+            <Award className="w-4 h-4 text-primary" />
             Selected Publications & Papers
           </h2>
           <div className="space-y-3 text-xs sm:text-sm">
             {publications.items.map((pub) => (
-              <div key={pub.id} className="border-l-2 border-blue-400 pl-3">
-                <div className="font-semibold text-gray-900">{pub.title}</div>
-                <div className="text-gray-500">
-                  {pub.journal_or_conference} ({pub.year}) • {pub.publication_type}
+              <div key={pub.id} className="border-l-2 border-signal/50 pl-4 py-1">
+                <div className="font-display font-semibold text-foreground">{pub.title}</div>
+                <div className="text-muted text-xs font-mono">
+                  {pub.journal_or_conference} ({pub.year}) · {pub.publication_type}
                 </div>
               </div>
             ))}
