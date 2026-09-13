@@ -3,6 +3,7 @@ import './globals.css'
 import { Navbar } from '@/components/Navbar'
 import { Footer } from '@/components/Footer'
 import { AnalyticsTracker } from '@/components/AnalyticsTracker'
+import { SystemTelemetryDock } from '@/components/SystemTelemetryDock'
 import portfolioData from '@/data/portfolio.json'
 
 export const metadata: Metadata = {
@@ -46,6 +47,7 @@ export default function RootLayout({
         <AnalyticsTracker />
         <Navbar />
         <main className="flex-grow relative">{children}</main>
+        <SystemTelemetryDock />
         <Footer />
       </body>
     </html>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import {
   Briefcase,
   Calendar,
@@ -12,13 +13,25 @@ import {
   Database,
   Terminal,
   Cpu,
-  Layers
+  Layers,
+  ArrowRight,
+  Download,
+  ChevronDown,
+  ChevronUp
 } from 'lucide-react'
+import { TiltCard } from '@/components/TiltCard'
+import { AnimatedCounter } from '@/components/AnimatedCounter'
 import portfolioData from '@/data/portfolio.json'
 
 export default function ExperiencePage() {
-  const { experience } = portfolioData.portfolio
+  const { experience, owner } = portfolioData.portfolio
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
+  const [expandedRoles, setExpandedRoles] = useState<Record<string, boolean>>({
+    'upskill-consultancy': true,
+    'data-analyst': true,
+    'wust-it-assistant': false,
+    'british-ielts-hr': false
+  })
 
   // Extract all unique categories
   const allCategories = ['All', ...Array.from(new Set(experience.roles.flatMap((r) => r.category)))]
@@ -27,6 +40,13 @@ export default function ExperiencePage() {
     selectedCategory === 'All'
       ? experience.roles
       : experience.roles.filter((r) => r.category.includes(selectedCategory))
+
+  const toggleRoleExpansion = (roleId: string) => {
+    setExpandedRoles((prev) => ({
+      ...prev,
+      [roleId]: !prev[roleId]
+    }))
+  }
 
   return (
     <div className="relative overflow-hidden py-28 md:py-36 max-w-5xl mx-auto px-5 md:px-8 space-y-12">
@@ -47,6 +67,45 @@ export default function ExperiencePage() {
         </p>
       </div>
 
+      {/* At-a-Glance Verified Career Metrics Bar */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 p-5 rounded-2xl panel border border-border/80 shadow-xl">
+        <div className="space-y-0.5">
+          <div className="font-display text-3xl font-bold text-primary font-mono">
+            <AnimatedCounter value={5} suffix="+" />
+          </div>
+          <div className="text-xs font-mono text-muted uppercase tracking-wider">
+            Years Experience
+          </div>
+        </div>
+
+        <div className="space-y-0.5">
+          <div className="font-display text-3xl font-bold text-signal font-mono">
+            <AnimatedCounter value={150} suffix="+" />
+          </div>
+          <div className="text-xs font-mono text-muted uppercase tracking-wider">
+            Test Cases Executed
+          </div>
+        </div>
+
+        <div className="space-y-0.5">
+          <div className="font-display text-3xl font-bold text-primary font-mono">
+            <AnimatedCounter value={60} suffix="+" />
+          </div>
+          <div className="text-xs font-mono text-muted uppercase tracking-wider">
+            Defects Tracked
+          </div>
+        </div>
+
+        <div className="space-y-0.5">
+          <div className="font-display text-3xl font-bold text-energy font-mono">
+            <AnimatedCounter value={30000} suffix="+" />
+          </div>
+          <div className="text-xs font-mono text-muted uppercase tracking-wider">
+            Records Analyzed
+          </div>
+        </div>
+      </div>
+
       {/* Category filter tabs */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
         <Filter className="w-4 h-4 text-primary shrink-0 ml-1" />
@@ -54,9 +113,9 @@ export default function ExperiencePage() {
           <button
             key={cat}
             onClick={() => setSelectedCategory(cat)}
-            className={`px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all shrink-0 ${
+            className={`px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-mono transition-all shrink-0 ${
               selectedCategory === cat
-                ? 'bg-primary text-primary-foreground font-semibold shadow-sm shadow-primary/20'
+                ? 'bg-primary text-primary-foreground font-semibold shadow-sm'
                 : 'bg-white/[0.04] text-muted hover:text-foreground hover:bg-white/[0.08] border border-border'
             }`}
           >
@@ -67,87 +126,135 @@ export default function ExperiencePage() {
 
       {/* Roles Timeline */}
       <div className="space-y-8 relative before:absolute before:inset-0 before:left-8 before:w-px before:bg-gradient-to-b before:from-primary/50 before:via-border before:to-transparent before:hidden md:before:block">
-        {filteredRoles.map((role) => (
-          <div
-            key={role.id}
-            className="rounded-2xl panel p-6 sm:p-8 lg:p-9 hover:panel-glow relative md:ml-16 transition-all"
-          >
-            {/* Timeline node icon */}
-            <div className="hidden md:flex absolute -left-[4.25rem] top-8 w-8 h-8 rounded-full bg-panel border border-primary/50 text-primary items-center justify-center shadow-lg ring-4 ring-background">
-              <Briefcase className="w-3.5 h-3.5" />
-            </div>
+        {filteredRoles.map((role) => {
+          const isExpanded = expandedRoles[role.id] ?? true
 
-            <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4 border-b border-border/70 pb-6">
-              <div>
-                <span className="eyebrow block">
-                  {role.company}
-                </span>
-                <h2 className="font-display text-2xl font-bold text-foreground mt-1">
-                  {role.role}
-                </h2>
-                <div className="flex flex-wrap items-center gap-4 mt-2 text-xs sm:text-sm text-muted">
-                  <span className="flex items-center gap-1.5 font-mono">
-                    <Calendar className="w-3.5 h-3.5 text-primary" />
-                    {role.start_date} — {role.end_date || 'Present'}
-                  </span>
-                  {role.location && (
-                    <span className="flex items-center gap-1.5 font-mono">
-                      <MapPin className="w-3.5 h-3.5 text-energy" />
-                      {role.location}
+          return (
+            <div key={role.id} className="relative md:ml-16">
+              {/* Timeline node icon */}
+              <div className="hidden md:flex absolute -left-[4.25rem] top-8 w-8 h-8 rounded-full bg-panel border border-primary/50 text-primary items-center justify-center shadow-lg ring-4 ring-background z-20">
+                <Briefcase className="w-3.5 h-3.5" />
+              </div>
+
+              <TiltCard className="p-6 sm:p-8 lg:p-9 transition-all">
+                <div className="flex flex-col lg:flex-row lg:items-start justify-between gap-4 border-b border-border/70 pb-6">
+                  <div>
+                    <span className="eyebrow block">
+                      {role.company}
                     </span>
-                  )}
-                </div>
-              </div>
-
-              {/* Category Badges */}
-              <div className="flex flex-wrap gap-1.5">
-                {role.category.map((cat) => (
-                  <span
-                    key={cat}
-                    className="text-xs font-mono px-2.5 py-1 rounded bg-white/[0.04] border border-border text-muted"
-                  >
-                    {cat}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <p className="mt-4 text-base text-foreground/90 leading-relaxed font-normal">
-              {role.summary}
-            </p>
-
-            {/* Key quantified metrics */}
-            {role.metrics && role.metrics.length > 0 && (
-              <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-xl bg-white/[0.02] border border-border/60">
-                {role.metrics.map((m) => (
-                  <div key={m.label} className="text-center sm:text-left">
-                    <div className="font-display text-2xl sm:text-3xl font-bold text-primary font-mono">
-                      {m.value}{m.suffix}
-                    </div>
-                    <div className="text-xs text-muted font-medium mt-0.5">
-                      {m.label}
+                    <h2 className="font-display text-2xl font-bold text-foreground mt-1">
+                      {role.role}
+                    </h2>
+                    <div className="flex flex-wrap items-center gap-4 mt-2 text-xs sm:text-sm text-muted">
+                      <span className="flex items-center gap-1.5 font-mono">
+                        <Calendar className="w-3.5 h-3.5 text-primary" />
+                        {role.start_date} — {role.end_date || 'Present'}
+                      </span>
+                      {role.location && (
+                        <span className="flex items-center gap-1.5 font-mono">
+                          <MapPin className="w-3.5 h-3.5 text-energy" />
+                          {role.location}
+                        </span>
+                      )}
                     </div>
                   </div>
-                ))}
-              </div>
-            )}
 
-            {/* Key Deliverables */}
-            <div className="mt-6 space-y-3">
-              <h3 className="text-xs font-mono uppercase tracking-wider text-muted-dark">
-                Key Responsibilities & Deliverables
-              </h3>
-              <ul className="space-y-2.5">
-                {role.responsibilities.map((resp, idx) => (
-                  <li key={idx} className="flex items-start gap-3 text-sm text-muted leading-relaxed">
-                    <CheckCircle2 className="w-4 h-4 text-signal shrink-0 mt-0.5" />
-                    <span>{resp}</span>
-                  </li>
-                ))}
-              </ul>
+                  {/* Category Badges */}
+                  <div className="flex flex-wrap gap-1.5">
+                    {role.category.map((cat) => (
+                      <span
+                        key={cat}
+                        className="text-xs font-mono px-2.5 py-1 rounded bg-white/[0.04] border border-border text-muted"
+                      >
+                        {cat}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <p className="mt-4 text-base text-foreground/90 leading-relaxed font-normal">
+                  {role.summary}
+                </p>
+
+                {/* Key quantified metrics */}
+                {role.metrics && role.metrics.length > 0 && (
+                  <div className="mt-6 grid grid-cols-2 sm:grid-cols-4 gap-4 p-4 rounded-xl bg-white/[0.02] border border-border/60">
+                    {role.metrics.map((m) => (
+                      <div key={m.label} className="text-center sm:text-left">
+                        <div className="font-display text-2xl sm:text-3xl font-bold text-primary font-mono">
+                          {m.value}{m.suffix}
+                        </div>
+                        <div className="text-xs text-muted font-medium mt-0.5">
+                          {m.label}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Key Deliverables (Expandable) */}
+                <div className="mt-6 space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-xs font-mono uppercase tracking-wider text-muted-dark">
+                      Key Responsibilities & Deliverables ({role.responsibilities.length})
+                    </h3>
+                    <button
+                      onClick={() => toggleRoleExpansion(role.id)}
+                      className="text-xs font-mono text-primary hover:underline flex items-center gap-1"
+                    >
+                      {isExpanded ? (
+                        <>
+                          <span>Collapse</span>
+                          <ChevronUp className="h-3 w-3" />
+                        </>
+                      ) : (
+                        <>
+                          <span>Expand All</span>
+                          <ChevronDown className="h-3 w-3" />
+                        </>
+                      )}
+                    </button>
+                  </div>
+
+                  {isExpanded && (
+                    <ul className="space-y-2.5 animate-fade-in pt-1">
+                      {role.responsibilities.map((resp, idx) => (
+                        <li key={idx} className="flex items-start gap-3 text-sm text-muted leading-relaxed">
+                          <CheckCircle2 className="w-4 h-4 text-signal shrink-0 mt-0.5" />
+                          <span>{resp}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </div>
+              </TiltCard>
             </div>
+          )
+        })}
+      </div>
+
+      {/* Bottom CTA for Resume & Publications */}
+      <div className="pt-6">
+        <TiltCard className="p-8 text-center flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="text-left space-y-1">
+            <h3 className="font-display text-xl font-bold text-foreground">
+              Looking for full employment details & credentials?
+            </h3>
+            <p className="text-sm text-muted">
+              Download the official curriculum vitae covering doctoral work, technical certifications, and publications.
+            </p>
           </div>
-        ))}
+
+          <div className="flex items-center gap-3 shrink-0">
+            <Link
+              href="/resume"
+              className="inline-flex items-center gap-2 rounded-lg btn-signal h-10 px-5 text-xs font-semibold uppercase tracking-wider"
+            >
+              <Download className="h-4 w-4" />
+              Download Resume (PDF)
+            </Link>
+          </div>
+        </TiltCard>
       </div>
     </div>
   )

@@ -19,19 +19,27 @@ import {
   ExternalLink,
   Users,
   Cpu,
-  Workflow,
-  FileText,
   Mail,
   Send,
-  Binary,
-  Compass
+  Copy,
+  Check,
+  Eye,
+  SlidersHorizontal,
+  ChevronRight
 } from 'lucide-react'
-import { LinkedinIcon, GithubIcon } from '@/components/Icons'
+import { TiltCard } from '@/components/TiltCard'
+import { AnimatedCounter } from '@/components/AnimatedCounter'
+import { TemplatePreviewModal, TemplatePreviewData } from '@/components/TemplatePreviewModal'
 import portfolioData from '@/data/portfolio.json'
 
 export default function HomePage() {
   const { home, owner, free_templates, publications, experience } = portfolioData.portfolio
   const [liveVisits, setLiveVisits] = useState<number>(1420)
+  const [activeStep, setActiveStep] = useState<number>(0)
+  const [activeToolCategory, setActiveToolCategory] = useState<string>('All')
+  const [previewTemplate, setPreviewTemplate] = useState<TemplatePreviewData | null>(null)
+  const [downloadSuccessToast, setDownloadSuccessToast] = useState<string | null>(null)
+  const [emailCopied, setEmailCopied] = useState(false)
   const [formSubmitted, setFormSubmitted] = useState<boolean>(false)
   const [contactData, setContactData] = useState({
     name: '',
@@ -65,6 +73,23 @@ export default function HomePage() {
     })
   }
 
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText(owner.email)
+    setEmailCopied(true)
+    setTimeout(() => setEmailCopied(false), 2500)
+  }
+
+  const handleTemplateDownload = (id: string, fileUrl: string, title: string) => {
+    fetch('/api/analytics', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ event_name: 'template_download', id })
+    }).catch(() => {})
+
+    setDownloadSuccessToast(title)
+    setTimeout(() => setDownloadSuccessToast(null), 4000)
+  }
+
   // 5-Step Career Arc modeled after the plain-language storytelling on adeolaaliu.com
   const journeySteps = [
     {
@@ -81,7 +106,7 @@ export default function HomePage() {
       subtitle: 'Washington University of Science & Technology · IT Assistant',
       icon: <Terminal className="h-5 w-5" />,
       description:
-        'At the university, I stepped deep into hands-on technology: supporting 100+ students and faculty, resolving 250+ technical requests, and configuring 75+ workstations, security access, and networks.'
+        'At the university, I stepped deep into hands-on technology: supporting 100+ students and faculty, resolving 250+ technical requests, and configuring 75+ workstations, security access, and campus network nodes.'
     },
     {
       step: '3',
@@ -89,7 +114,7 @@ export default function HomePage() {
       subtitle: 'TaskInspota Inc. · Data Analyst',
       icon: <Database className="h-5 w-5" />,
       description:
-        'I validated, cleansed, and analyzed 30,000+ records across 20+ datasets. Using SQL, Python, and Excel, I learned how messy raw data creates silent system failures, and how rigorous validation protects business decisions.'
+        'I validated, cleansed, and analyzed 30,000+ records across 20+ datasets. Using SQL, Python, and Excel, I learned how messy raw data creates silent system failures, and how rigorous validation protects critical business decisions.'
     },
     {
       step: '4',
@@ -109,11 +134,11 @@ export default function HomePage() {
     }
   ]
 
-  // Software & Tools constellation
+  // Software & Tools constellation with categories
   const toolsConstellation = [
     {
       category: 'Software Quality & Testing',
-      tools: ['Manual Testing', 'Automated Testing', 'Regression Testing', 'Jira', 'Selenium', 'Playwright', 'Test Case Design', 'Defect Tracking', 'UAT']
+      tools: ['Manual Testing', 'Automated Testing', 'Regression Testing', 'Jira', 'Selenium', 'Playwright', 'Test Case Design', 'Defect Tracking', 'User Acceptance Testing (UAT)']
     },
     {
       category: 'Data Analytics & Validation',
@@ -129,24 +154,46 @@ export default function HomePage() {
     }
   ]
 
+  const toolCategories = ['All', ...toolsConstellation.map((t) => t.category)]
+
+  const filteredToolGroups =
+    activeToolCategory === 'All'
+      ? toolsConstellation
+      : toolsConstellation.filter((t) => t.category === activeToolCategory)
+
   return (
-    <div className="relative overflow-hidden space-y-24 md:space-y-32 pb-24">
+    <div className="relative overflow-hidden space-y-28 md:space-y-36 pb-28">
+      {/* Interactive Template Preview Modal */}
+      <TemplatePreviewModal
+        template={previewTemplate}
+        onClose={() => setPreviewTemplate(null)}
+        onDownload={handleTemplateDownload}
+      />
+
+      {/* Floating Download Success Toast */}
+      {downloadSuccessToast && (
+        <div className="fixed bottom-6 right-6 z-50 bg-panel border border-signal text-foreground px-5 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 animate-fade-in backdrop-blur-xl">
+          <CheckCircle2 className="w-5 h-5 text-signal" />
+          <span className="text-sm">Downloaded: <strong className="text-primary">{downloadSuccessToast}</strong></span>
+        </div>
+      )}
+
       {/* Ambient Engineering Background (Atmospheric Orbs & 72px Tech Grid) */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 overflow-hidden h-[120vh] min-h-[820px]"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 overflow-hidden h-[125vh] min-h-[850px]"
         aria-hidden="true"
       >
         <div className="absolute inset-0 tech-grid opacity-[0.38]" />
-        
+
         {/* Atmospheric Drift Glow Orbs */}
-        <div className="absolute left-[6%] top-[12%] h-72 w-72 animate-drift rounded-full bg-primary/20 blur-[110px]" />
+        <div className="absolute left-[6%] top-[10%] h-72 w-72 animate-drift rounded-full bg-primary/20 blur-[110px]" />
         <div className="absolute right-[8%] top-[24%] h-80 w-80 animate-drift rounded-full bg-energy/15 blur-[120px] [animation-delay:-4s]" />
         <div className="absolute left-[36%] top-[2%] h-64 w-64 animate-drift rounded-full bg-signal/15 blur-[100px] [animation-delay:-7s]" />
 
         {/* Orbital SVG Radar / Compass Rings */}
         <svg
           viewBox="0 0 100 100"
-          className="absolute right-[5%] top-[8%] h-44 w-44 animate-spin-slow text-primary/20 md:h-64 md:w-64"
+          className="absolute right-[5%] top-[8%] h-48 w-48 animate-spin-slow text-primary/20 md:h-72 md:w-72"
           aria-hidden="true"
           fill="none"
           stroke="currentColor"
@@ -157,7 +204,7 @@ export default function HomePage() {
 
         <svg
           viewBox="0 0 100 100"
-          className="absolute right-[8%] top-[12%] h-32 w-32 animate-spin-slow-reverse text-energy/20 md:h-48 md:w-48"
+          className="absolute right-[8%] top-[12%] h-36 w-36 animate-spin-slow-reverse text-energy/20 md:h-52 md:w-52"
           aria-hidden="true"
           fill="none"
           stroke="currentColor"
@@ -199,17 +246,17 @@ export default function HomePage() {
         </span>
 
         {/* Primary bold claim */}
-        <h1 className="mt-5 max-w-4xl font-display text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.08] text-foreground tracking-tight">
+        <h1 className="mt-5 max-w-4xl font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.08] text-foreground tracking-tight">
           I help software and data systems <span className="font-accent italic font-normal text-gradient">work reliably</span> at scale.
         </h1>
 
         {/* Narrative descriptions */}
         <p className="mt-6 max-w-2xl text-lg sm:text-xl leading-relaxed text-muted">
-          I am an IT consultant, QA analyst, and data researcher. I work across software quality assurance, test automation, data cleansing, and technical environments. My job is to find the defects, validate data accuracy, and verify systems before they reach users.
+          I am an IT consultant, QA analyst, and data researcher. I work across software quality assurance, test automation, data cleansing, and technical environments. My job is to find defects, validate data accuracy, and verify systems before they reach users.
         </p>
 
         <p className="mt-4 max-w-2xl text-base sm:text-lg leading-relaxed text-muted/80">
-          I combine graduate training in Information Technology with doctoral research in Computer Science, bridging hands-on defect management with advanced machine learning methods.
+          I combine graduate training in Information Technology with doctoral research in Computer Science, bridging hands-on defect management with predictive machine learning models.
         </p>
 
         {/* Glowing Action Buttons */}
@@ -237,17 +284,14 @@ export default function HomePage() {
           </a>
         </div>
 
-        {/* 4 Telemetry Metrics Cards with cursor hover glow */}
+        {/* 4 Telemetry Metrics Cards with TiltCard 3D & Count-Up animation */}
         <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {home.metrics.map((metric) => {
             const displayVal = metric.dynamic ? liveVisits : metric.value
             return (
-              <div
-                key={metric.id}
-                className="group relative overflow-hidden rounded-xl panel p-6 hover:panel-glow"
-              >
+              <TiltCard key={metric.id} className="p-6">
                 <div className="font-display text-4xl md:text-5xl font-bold text-primary tracking-tight">
-                  <span>{displayVal.toLocaleString()}</span>
+                  <AnimatedCounter value={displayVal} />
                   <span className="text-signal text-3xl md:text-4xl">{metric.suffix}</span>
                 </div>
                 <p className="mt-2 text-sm leading-snug text-muted font-medium">
@@ -259,7 +303,7 @@ export default function HomePage() {
                     Live verified counter
                   </span>
                 )}
-              </div>
+              </TiltCard>
             )
           })}
         </div>
@@ -277,14 +321,11 @@ export default function HomePage() {
           </p>
         </header>
 
-        {/* Connected Journey List */}
+        {/* Connected Journey List with Interactive Tilt */}
         <ol className="space-y-6 relative">
           {journeySteps.map((step, idx) => (
-            <li
-              key={step.step}
-              className="group relative rounded-2xl panel p-6 md:p-8 hover:panel-glow"
-            >
-              <div>
+            <li key={step.step} className="relative">
+              <TiltCard className="p-6 md:p-8">
                 <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary border border-primary/20 transition-transform duration-300 group-hover:scale-110">
                     {step.icon}
@@ -304,12 +345,12 @@ export default function HomePage() {
                 <p className="mt-3 text-base sm:text-lg leading-relaxed text-muted">
                   {step.description}
                 </p>
-              </div>
+              </TiltCard>
 
-              {/* Connecting line between cards */}
+              {/* Connecting vertical line between cards */}
               {idx < journeySteps.length - 1 && (
                 <span
-                  className="absolute -bottom-6 left-10 hidden h-6 w-px bg-gradient-to-b from-primary/40 to-transparent md:block"
+                  className="absolute -bottom-6 left-10 hidden h-6 w-px bg-gradient-to-b from-primary/50 to-transparent md:block z-20"
                   aria-hidden="true"
                 />
               )}
@@ -318,9 +359,9 @@ export default function HomePage() {
         </ol>
       </section>
 
-      {/* Software & Tools Constellation */}
-      <section className="mx-auto max-w-5xl scroll-mt-24 px-5 py-12 md:px-8">
-        <header className="mb-10 max-w-3xl">
+      {/* Software & Tools Constellation with Live Tab Filtering */}
+      <section className="mx-auto max-w-5xl scroll-mt-24 px-5 py-12 md:px-8 space-y-8">
+        <header className="max-w-3xl">
           <span className="eyebrow">Tools & Systems</span>
           <h2 className="mt-3 font-display text-3xl md:text-4xl font-bold leading-tight text-foreground">
             Software I work with every day
@@ -330,12 +371,27 @@ export default function HomePage() {
           </p>
         </header>
 
-        <div className="grid gap-6 md:grid-cols-2">
-          {toolsConstellation.map((group) => (
-            <div
-              key={group.category}
-              className="rounded-2xl panel p-6 sm:p-7 hover:panel-glow"
+        {/* Category Filter Chips */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+          <SlidersHorizontal className="h-4 w-4 text-primary shrink-0 ml-1" />
+          {toolCategories.map((cat) => (
+            <button
+              key={cat}
+              onClick={() => setActiveToolCategory(cat)}
+              className={`px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-mono transition-all shrink-0 ${
+                activeToolCategory === cat
+                  ? 'bg-primary text-primary-foreground font-semibold shadow-sm'
+                  : 'bg-white/[0.04] text-muted hover:text-foreground border border-border'
+              }`}
             >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        <div className="grid gap-6 md:grid-cols-2">
+          {filteredToolGroups.map((group) => (
+            <TiltCard key={group.category} className="p-6 sm:p-7">
               <h3 className="font-display text-lg font-bold text-foreground flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full bg-primary" />
                 {group.category}
@@ -351,12 +407,12 @@ export default function HomePage() {
                   </li>
                 ))}
               </ul>
-            </div>
+            </TiltCard>
           ))}
         </div>
       </section>
 
-      {/* Featured Projects / Roles Highlight */}
+      {/* Featured Projects / Track Record Section */}
       <section className="mx-auto max-w-5xl scroll-mt-24 px-5 py-12 md:px-8">
         <header className="mb-10 max-w-3xl">
           <span className="eyebrow">Track Record</span>
@@ -370,7 +426,7 @@ export default function HomePage() {
 
         <div className="grid gap-6 md:grid-cols-2">
           {/* Card 1: UpSkill Consultancy */}
-          <article className="group relative overflow-hidden rounded-2xl panel p-6 sm:p-8 hover:panel-glow">
+          <TiltCard className="p-6 sm:p-8">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <span className="inline-flex items-center gap-2">
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
@@ -392,10 +448,10 @@ export default function HomePage() {
               <span>150+ Tests Executed</span>
               <span>60+ Bugs Resolved</span>
             </div>
-          </article>
+          </TiltCard>
 
           {/* Card 2: TaskInspota */}
-          <article className="group relative overflow-hidden rounded-2xl panel p-6 sm:p-8 hover:panel-glow">
+          <TiltCard className="p-6 sm:p-8">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <span className="inline-flex items-center gap-2">
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
@@ -417,10 +473,10 @@ export default function HomePage() {
               <span>30k+ Records Audited</span>
               <span>25+ Executive Reports</span>
             </div>
-          </article>
+          </TiltCard>
 
-          {/* Card 3: Publications / Machine Learning */}
-          <article className="group relative overflow-hidden rounded-2xl panel p-6 sm:p-8 hover:panel-glow">
+          {/* Card 3: Publications */}
+          <TiltCard className="p-6 sm:p-8">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <span className="inline-flex items-center gap-2">
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
@@ -440,18 +496,21 @@ export default function HomePage() {
 
             <div className="mt-5 pt-4 border-t border-border flex items-center justify-between text-xs font-mono text-primary">
               <span>Peer-Reviewed Journal</span>
-              <span>Open PDF Access</span>
+              <Link href="/publications" className="hover:underline flex items-center gap-1">
+                View Publications
+                <ChevronRight className="h-3 w-3" />
+              </Link>
             </div>
-          </article>
+          </TiltCard>
 
-          {/* Card 4: WUST IT Infrastructure */}
-          <article className="group relative overflow-hidden rounded-2xl panel p-6 sm:p-8 hover:panel-glow">
+          {/* Card 4: WUST Campus */}
+          <TiltCard className="p-6 sm:p-8">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <span className="inline-flex items-center gap-2">
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
                   <Terminal className="h-4 w-4" />
                 </span>
-                <span className="eyebrow">WUST Campus Infrastructure</span>
+                <span className="eyebrow">Campus Infrastructure</span>
               </span>
               <span className="font-mono text-xs text-muted">Vienna, VA · IT Systems</span>
             </div>
@@ -467,7 +526,7 @@ export default function HomePage() {
               <span>100+ Users Supported</span>
               <span>250+ Requests Solved</span>
             </div>
-          </article>
+          </TiltCard>
         </div>
       </section>
 
@@ -479,16 +538,13 @@ export default function HomePage() {
             Free QA & analytics templates you can use today
           </h2>
           <p className="mt-4 text-base sm:text-lg leading-relaxed text-muted">
-            Structured worksheets and checklists I use to design test matrices, track defects, and audit enterprise data. Download them in Excel format and adapt them freely.
+            Structured worksheets and checklists I use to design test matrices, track defects, and audit enterprise data. Preview the spreadsheet layout or download directly.
           </p>
         </header>
 
         <div className="grid gap-6 md:grid-cols-2">
           {free_templates.templates.map((tmpl) => (
-            <article
-              key={tmpl.id}
-              className="flex flex-col justify-between rounded-2xl panel p-6 sm:p-7 hover:panel-glow"
-            >
+            <TiltCard key={tmpl.id} className="p-6 sm:p-7 flex flex-col justify-between">
               <div>
                 <div className="flex items-center justify-between gap-2 mb-2">
                   <span className="text-xs font-mono uppercase tracking-wider text-primary">
@@ -507,7 +563,7 @@ export default function HomePage() {
 
                 <div className="mt-4 p-3 rounded-lg bg-white/[0.02] border border-border/60">
                   <span className="text-[11px] font-mono uppercase tracking-wider text-muted-dark block mb-1">
-                    Columns included:
+                    Columns included ({tmpl.includes.length}):
                   </span>
                   <div className="flex flex-wrap gap-1.5 text-xs text-muted">
                     {tmpl.includes.slice(0, 5).map((col) => (
@@ -523,38 +579,43 @@ export default function HomePage() {
               </div>
 
               <div className="mt-6 pt-4 border-t border-border flex items-center justify-between gap-3">
-                <a
-                  href={tmpl.file_url}
-                  download
-                  onClick={() => {
-                    fetch('/api/analytics', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({ event_name: 'template_download', id: tmpl.id })
-                    }).catch(() => {})
-                  }}
-                  className="inline-flex items-center justify-center gap-2 rounded-lg btn-signal h-9 px-4 text-xs font-semibold uppercase tracking-wider"
-                >
-                  <Download className="h-3.5 w-3.5" />
-                  Download
-                </a>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setPreviewTemplate(tmpl as TemplatePreviewData)}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-white/[0.04] px-3 py-1.5 text-xs font-semibold text-muted hover:text-foreground hover:bg-white/[0.08] transition-colors"
+                  >
+                    <Eye className="h-3.5 w-3.5 text-primary" />
+                    Preview
+                  </button>
+                  <a
+                    href={tmpl.file_url}
+                    download
+                    onClick={() => handleTemplateDownload(tmpl.id, tmpl.file_url, tmpl.title)}
+                    className="inline-flex items-center gap-1.5 rounded-lg btn-signal h-8 px-3 text-xs font-semibold uppercase tracking-wider"
+                  >
+                    <Download className="h-3.5 w-3.5" />
+                    Download
+                  </a>
+                </div>
                 <span className="text-xs font-mono text-muted">
-                  {tmpl.download_count} community downloads
+                  {tmpl.download_count} downloads
                 </span>
               </div>
-            </article>
+            </TiltCard>
           ))}
         </div>
 
         {/* Aggregate counter callout */}
         <div className="mt-8 rounded-xl panel p-4 text-center">
           <p className="text-sm font-mono text-muted">
-            <span className="text-primary font-bold">{free_templates.aggregate_metrics.total_downloads}+</span> professional templates downloaded by QA testers & data analysts so far
+            <span className="text-primary font-bold">
+              <AnimatedCounter value={free_templates.aggregate_metrics.total_downloads} />+
+            </span> professional templates downloaded by QA testers & data analysts so far
           </p>
         </div>
       </section>
 
-      {/* Network Node & Contact Section */}
+      {/* Network Node & Interactive Contact Section */}
       <section className="mx-auto max-w-5xl scroll-mt-24 px-5 py-12 md:px-8">
         <header className="mb-10 max-w-3xl">
           <span className="eyebrow">Connect</span>
@@ -568,55 +629,51 @@ export default function HomePage() {
 
         <div className="grid gap-8 lg:grid-cols-[0.85fr_1fr]">
           {/* Left: Telemetry Node Panel */}
-          <div className="relative overflow-hidden rounded-2xl panel p-6 md:p-8">
-            <div className="absolute inset-0 tech-grid opacity-30 pointer-events-none" />
-            <div className="relative">
-              <span className="eyebrow">Active Collaboration Nodes</span>
-              <p className="mt-4 text-sm leading-relaxed text-muted">
-                I am actively engaged in consulting, contract QA execution, enterprise data audits, and scientific academic collaborations.
-              </p>
+          <TiltCard className="p-6 md:p-8">
+            <span className="eyebrow">Active Collaboration Nodes</span>
+            <p className="mt-4 text-sm leading-relaxed text-muted">
+              I am actively engaged in consulting, contract QA execution, enterprise data audits, and scientific academic collaborations.
+            </p>
 
-              <ul className="mt-6 space-y-2.5">
-                {[
-                  'Software Quality Assurance & UAT',
-                  'Automated Regression Test Suites',
-                  'Enterprise SQL Data Cleansing',
-                  'Defect Prediction Machine Learning',
-                  'Doctoral Research & Publications',
-                  'Agile Sprint Release Validation',
-                  'Technical Problem Solving & Support'
-                ].map((node) => (
-                  <li key={node} className="flex items-center gap-3">
-                    <span className="h-5 w-5 shrink-0 rounded-full border border-primary/50 flex items-center justify-center">
-                      <span className="h-1.5 w-1.5 rounded-full bg-signal animate-pulse-node" />
-                    </span>
-                    <span className="font-mono text-xs text-muted hover:text-foreground transition-colors">
-                      {node}
-                    </span>
-                  </li>
-                ))}
-              </ul>
+            <ul className="mt-6 space-y-2.5">
+              {[
+                'Software Quality Assurance & UAT',
+                'Automated Regression Test Suites',
+                'Enterprise SQL Data Cleansing',
+                'Defect Prediction Machine Learning',
+                'Doctoral Research & Publications',
+                'Agile Sprint Release Validation',
+                'Technical Problem Solving & Support'
+              ].map((node) => (
+                <li key={node} className="flex items-center gap-3">
+                  <span className="h-5 w-5 shrink-0 rounded-full border border-primary/50 flex items-center justify-center">
+                    <span className="h-1.5 w-1.5 rounded-full bg-signal animate-pulse-node" />
+                  </span>
+                  <span className="font-mono text-xs text-muted hover:text-foreground transition-colors">
+                    {node}
+                  </span>
+                </li>
+              ))}
+            </ul>
 
-              <div className="mt-8 pt-6 border-t border-border/80 flex items-center gap-4 text-xs font-mono text-muted">
+            <div className="mt-8 pt-6 border-t border-border/80 flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-muted">
+              <div className="flex items-center gap-2">
                 <span>Fairfax, VA / Remote</span>
-                <span>·</span>
-                <a
-                  href={owner.linkedin_url}
-                  target="_blank"
-                  rel="noreferrer noopener"
-                  className="text-primary hover:underline flex items-center gap-1"
-                >
-                  LinkedIn
-                  <ExternalLink className="h-3 w-3" />
-                </a>
               </div>
+              <button
+                onClick={handleCopyEmail}
+                className="inline-flex items-center gap-1.5 text-primary hover:underline"
+              >
+                {emailCopied ? <Check className="h-3.5 w-3.5 text-signal" /> : <Copy className="h-3.5 w-3.5" />}
+                <span>{emailCopied ? 'Email Copied' : owner.email}</span>
+              </button>
             </div>
-          </div>
+          </TiltCard>
 
           {/* Right: Contact Form */}
-          <form onSubmit={handleContactSubmit} className="rounded-2xl panel p-6 md:p-8">
+          <form onSubmit={handleContactSubmit} className="rounded-2xl panel p-6 md:p-8 hover:panel-glow">
             {formSubmitted && (
-              <div className="mb-6 p-4 rounded-xl bg-signal/10 border border-signal/30 text-signal text-sm flex items-center gap-2">
+              <div className="mb-6 p-4 rounded-xl bg-signal/10 border border-signal/30 text-signal text-sm flex items-center gap-2 animate-fade-in">
                 <CheckCircle2 className="h-5 w-5 shrink-0" />
                 <span>Thank you! Your message has been received. I will respond promptly.</span>
               </div>
@@ -669,7 +726,7 @@ export default function HomePage() {
 
               <div className="space-y-1.5 sm:col-span-2">
                 <label className="text-xs font-mono uppercase tracking-wider text-muted block" htmlFor="reason">
-                  Topic / Inequity *
+                  Topic / Inquiry *
                 </label>
                 <select
                   id="reason"
@@ -681,7 +738,7 @@ export default function HomePage() {
                   <option value="Data Analytics & Cleansing">Data Analytics & Cleansing</option>
                   <option value="Doctoral Research Collaboration">Doctoral Research Collaboration</option>
                   <option value="Consulting / IT Support">Consulting / IT Support</option>
-                  <option value="General Inequity">General Inquiry</option>
+                  <option value="General Inquiry">General Inquiry</option>
                 </select>
               </div>
 
@@ -714,7 +771,7 @@ export default function HomePage() {
 
       {/* Closing Statement Panel */}
       <section className="mx-auto max-w-5xl px-5 pb-10 md:px-8">
-        <div className="rounded-2xl panel p-8 text-center md:p-12 hover:panel-glow">
+        <TiltCard className="p-8 text-center md:p-12">
           <h2 className="mx-auto max-w-2xl font-display text-3xl md:text-4xl font-bold leading-tight text-foreground">
             Reliable technology isn&#39;t an accident. <span className="font-accent italic text-gradient font-normal">It is verified.</span>
           </h2>
@@ -751,14 +808,14 @@ export default function HomePage() {
           <div className="mx-auto mt-10 max-w-xs">
             <div className="rounded-xl border border-border bg-white/[0.02] px-6 py-4 text-center">
               <p className="font-display text-3xl font-bold text-primary font-mono">
-                {liveVisits.toLocaleString()}+
+                <AnimatedCounter value={liveVisits} />+
               </p>
               <p className="mt-1 text-xs text-muted uppercase tracking-wider font-mono">
                 Visits to this portfolio so far
               </p>
             </div>
           </div>
-        </div>
+        </TiltCard>
       </section>
     </div>
   )

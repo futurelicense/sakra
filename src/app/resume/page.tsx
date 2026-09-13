@@ -13,14 +13,19 @@ import {
   Terminal,
   ShieldCheck,
   Layers,
-  Sparkles
+  Sparkles,
+  Copy,
+  Check,
+  Printer
 } from 'lucide-react'
+import { TiltCard } from '@/components/TiltCard'
 import { LinkedinIcon } from '@/components/Icons'
 import portfolioData from '@/data/portfolio.json'
 
 export default function ResumePage() {
   const { owner, experience, publications, home } = portfolioData.portfolio
   const [downloadSuccess, setDownloadSuccess] = useState(false)
+  const [copiedEmail, setCopiedEmail] = useState(false)
 
   const handleDownload = () => {
     fetch('/api/analytics', {
@@ -31,6 +36,16 @@ export default function ResumePage() {
 
     setDownloadSuccess(true)
     setTimeout(() => setDownloadSuccess(false), 4000)
+  }
+
+  const handleCopyEmail = () => {
+    navigator.clipboard.writeText(owner.email)
+    setCopiedEmail(true)
+    setTimeout(() => setCopiedEmail(false), 2500)
+  }
+
+  const handlePrint = () => {
+    window.print()
   }
 
   return (
@@ -61,12 +76,20 @@ export default function ResumePage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5">
+          <button
+            onClick={handlePrint}
+            className="inline-flex items-center gap-2 rounded-lg border border-border bg-white/[0.04] px-4 py-2.5 text-xs font-mono text-muted hover:text-foreground hover:bg-white/[0.08] transition-colors"
+          >
+            <Printer className="w-4 h-4 text-muted" />
+            <span>Print</span>
+          </button>
+
           <a
             href={owner.resume_url}
             download
             onClick={handleDownload}
-            className="inline-flex items-center gap-2 rounded-lg btn-signal h-11 px-5 text-xs font-semibold uppercase tracking-wider"
+            className="inline-flex items-center gap-2 rounded-lg btn-signal h-10 px-5 text-xs font-semibold uppercase tracking-wider"
           >
             <Download className="w-4 h-4" />
             Download PDF
@@ -75,17 +98,23 @@ export default function ResumePage() {
       </div>
 
       {/* Technical Resume Console Document */}
-      <div className="rounded-3xl panel p-8 sm:p-12 shadow-2xl space-y-10 text-foreground">
+      <div className="rounded-3xl panel p-8 sm:p-12 shadow-2xl space-y-10 text-foreground print:bg-white print:text-black">
         {/* Contact Info Header */}
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-border/60 pb-6 text-xs sm:text-sm font-mono text-muted">
-          <div className="flex items-center gap-2">
+          <button
+            onClick={handleCopyEmail}
+            className="flex items-center gap-2 text-muted hover:text-primary transition-colors"
+          >
             <Mail className="w-4 h-4 text-energy" />
             <span>{owner.email}</span>
-          </div>
+            {copiedEmail ? <Check className="w-3.5 h-3.5 text-signal" /> : <Copy className="w-3.5 h-3.5" />}
+          </button>
+
           <div className="flex items-center gap-2">
             <MapPin className="w-4 h-4 text-primary" />
             <span>{owner.location}</span>
           </div>
+
           <div className="flex items-center gap-2">
             <LinkedinIcon className="w-4 h-4 text-primary" />
             <a
@@ -117,7 +146,7 @@ export default function ResumePage() {
             Education & Doctoral Studies
           </h2>
           <div className="space-y-3 text-sm">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 rounded-xl bg-white/[0.02] border border-border/40">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl bg-white/[0.02] border border-border/40">
               <div>
                 <strong className="text-foreground text-base font-display">Doctor of Computer Science (DCS)</strong>
                 <div className="text-muted text-xs font-mono">Washington University of Science and Technology (WUST)</div>
@@ -126,7 +155,7 @@ export default function ResumePage() {
                 In Progress (Expected 2026/2027)
               </span>
             </div>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-3.5 rounded-xl bg-white/[0.02] border border-border/40">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl bg-white/[0.02] border border-border/40">
               <div>
                 <strong className="text-foreground text-base font-display">Master of Science in Information Technology (MSIT)</strong>
                 <div className="text-muted text-xs font-mono">Washington University of Science and Technology (WUST)</div>

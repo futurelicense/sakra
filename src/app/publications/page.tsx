@@ -12,8 +12,13 @@ import {
   Award,
   Filter,
   CheckCircle2,
-  Sparkles
+  Sparkles,
+  Quote,
+  Cpu
 } from 'lucide-react'
+import { TiltCard } from '@/components/TiltCard'
+import { AnimatedCounter } from '@/components/AnimatedCounter'
+import { CitationModal, PublicationCitationData } from '@/components/CitationModal'
 import portfolioData from '@/data/portfolio.json'
 
 export default function PublicationsPage() {
@@ -21,6 +26,7 @@ export default function PublicationsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All Categories')
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [downloadCounters, setDownloadCounters] = useState<Record<string, number>>({})
+  const [activeCitationPub, setActiveCitationPub] = useState<PublicationCitationData | null>(null)
 
   const handleDownload = (pubId: string, pdfUrl: string) => {
     fetch('/api/analytics', {
@@ -59,24 +65,79 @@ export default function PublicationsPage() {
     return matchesCat && matchesQuery
   })
 
+  // Total publication reads / downloads
+  const totalViews = publications.items.reduce((acc, curr) => acc + curr.views, 0)
+  const totalDownloads = publications.items.reduce(
+    (acc, curr) => acc + curr.downloads + (downloadCounters[curr.id] || 0),
+    0
+  )
+
   return (
     <div className="relative overflow-hidden py-28 md:py-36 max-w-5xl mx-auto px-5 md:px-8 space-y-12">
       {/* Background Grid */}
       <div className="pointer-events-none absolute inset-0 tech-grid opacity-20 -z-10" />
 
+      {/* Interactive Citation Modal */}
+      <CitationModal
+        publication={activeCitationPub}
+        onClose={() => setActiveCitationPub(null)}
+      />
+
       {/* Page Header */}
-      <div className="max-w-3xl space-y-4">
-        <span className="eyebrow inline-flex items-center gap-2">
-          <span className="h-1.5 w-1.5 rounded-full bg-signal animate-pulse-node" />
-          Academic & Applied Research
-        </span>
-        <h1 className="font-display text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
-          {publications.page_title}
-        </h1>
-        <p className="text-base sm:text-lg text-muted leading-relaxed">
-          {publications.page_subtitle}
-        </p>
+      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 border-b border-border/70 pb-8">
+        <div className="max-w-3xl space-y-4">
+          <span className="eyebrow inline-flex items-center gap-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-signal animate-pulse-node" />
+            Academic & Applied Research
+          </span>
+          <h1 className="font-display text-4xl sm:text-5xl font-bold tracking-tight text-foreground">
+            {publications.page_title}
+          </h1>
+          <p className="text-base sm:text-lg text-muted leading-relaxed">
+            {publications.page_subtitle}
+          </p>
+        </div>
+
+        {/* Global Citation / Reading Telemetry */}
+        <div className="grid grid-cols-2 gap-4 rounded-2xl panel p-4 shrink-0 text-center font-mono">
+          <div>
+            <div className="font-display text-2xl font-bold text-primary">
+              <AnimatedCounter value={totalViews} />
+            </div>
+            <div className="text-[11px] text-muted uppercase tracking-wider mt-0.5">
+              Paper Reads
+            </div>
+          </div>
+          <div>
+            <div className="font-display text-2xl font-bold text-signal">
+              <AnimatedCounter value={totalDownloads} />
+            </div>
+            <div className="text-[11px] text-muted uppercase tracking-wider mt-0.5">
+              PDF Downloads
+            </div>
+          </div>
+        </div>
       </div>
+
+      {/* Doctoral Focus Banner */}
+      <TiltCard className="p-6 md:p-8 border-primary/30">
+        <div className="flex items-start gap-4">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/10 text-primary border border-primary/20">
+            <Cpu className="h-5 w-5" />
+          </span>
+          <div className="space-y-1.5">
+            <span className="text-xs font-mono uppercase tracking-wider text-primary">
+              Doctoral Research Focus · Doctor of Computer Science (DCS)
+            </span>
+            <h3 className="font-display text-lg font-bold text-foreground">
+              Predictive Defect Modeling & Intelligent Regression Scheduling in CI/CD
+            </h3>
+            <p className="text-sm text-muted leading-relaxed">
+              Investigating the integration of lightweight machine learning classifiers directly into continuous integration workflows, reducing test run overhead while surfacing defects earlier in the software development lifecycle.
+            </p>
+          </div>
+        </div>
+      </TiltCard>
 
       {/* Filter and Search Bar */}
       <div className="flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4">
@@ -86,9 +147,9 @@ export default function PublicationsPage() {
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all shrink-0 ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-mono transition-all shrink-0 ${
                 selectedCategory === cat
-                  ? 'bg-primary text-primary-foreground font-semibold shadow-sm shadow-primary/20'
+                  ? 'bg-primary text-primary-foreground font-semibold shadow-sm'
                   : 'bg-white/[0.04] text-muted hover:text-foreground hover:bg-white/[0.08] border border-border'
               }`}
             >
@@ -124,10 +185,7 @@ export default function PublicationsPage() {
             const totalDownloads = pub.downloads + addedDownloads
 
             return (
-              <div
-                key={pub.id}
-                className="rounded-2xl panel p-6 sm:p-8 hover:panel-glow transition-all space-y-4"
-              >
+              <TiltCard key={pub.id} className="p-6 sm:p-8 space-y-4">
                 <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                   <div className="space-y-2">
                     <div className="flex flex-wrap items-center gap-2">
@@ -174,7 +232,7 @@ export default function PublicationsPage() {
                   {pub.abstract}
                 </div>
 
-                {/* Tags & Actions */}
+                {/* Tags & Action Buttons */}
                 <div className="pt-2 flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-t border-border/60">
                   <div className="flex flex-wrap gap-1.5">
                     {pub.tags.map((tag) => (
@@ -187,7 +245,15 @@ export default function PublicationsPage() {
                     ))}
                   </div>
 
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2.5">
+                    <button
+                      onClick={() => setActiveCitationPub(pub as PublicationCitationData)}
+                      className="inline-flex items-center gap-1.5 text-xs font-mono text-muted hover:text-foreground bg-white/[0.04] border border-border px-3 py-2 rounded-lg transition-colors"
+                    >
+                      <Quote className="h-3.5 w-3.5 text-primary" />
+                      <span>Cite</span>
+                    </button>
+
                     {pub.external_url && (
                       <a
                         href={pub.external_url}
@@ -196,10 +262,11 @@ export default function PublicationsPage() {
                         onClick={() => handleView(pub.id)}
                         className="inline-flex items-center gap-1.5 text-xs font-mono text-muted hover:text-primary bg-white/[0.03] border border-border hover:border-primary/40 px-3 py-2 rounded-lg transition-colors"
                       >
-                        <span>View DOI / Source</span>
+                        <span>View Source</span>
                         <ExternalLink className="w-3.5 h-3.5" />
                       </a>
                     )}
+
                     <a
                       href={pub.pdf_url}
                       download
@@ -211,7 +278,7 @@ export default function PublicationsPage() {
                     </a>
                   </div>
                 </div>
-              </div>
+              </TiltCard>
             )
           })
         )}

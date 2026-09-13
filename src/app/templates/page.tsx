@@ -9,8 +9,12 @@ import {
   Layers,
   ArrowDownToLine,
   Search,
-  Sparkles
+  Sparkles,
+  Eye
 } from 'lucide-react'
+import { TiltCard } from '@/components/TiltCard'
+import { AnimatedCounter } from '@/components/AnimatedCounter'
+import { TemplatePreviewModal, TemplatePreviewData } from '@/components/TemplatePreviewModal'
 import portfolioData from '@/data/portfolio.json'
 
 export default function TemplatesPage() {
@@ -18,7 +22,8 @@ export default function TemplatesPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [counters, setCounters] = useState<Record<string, number>>({})
-  const [downloadSuccess, setDownloadSuccess] = useState<string | null>(null)
+  const [previewTemplate, setPreviewTemplate] = useState<TemplatePreviewData | null>(null)
+  const [downloadSuccessToast, setDownloadSuccessToast] = useState<string | null>(null)
 
   useEffect(() => {
     fetch('/api/analytics')
@@ -48,8 +53,8 @@ export default function TemplatesPage() {
         setCounters(data.data.template_downloads)
       }
 
-      setDownloadSuccess(title)
-      setTimeout(() => setDownloadSuccess(null), 4000)
+      setDownloadSuccessToast(title)
+      setTimeout(() => setDownloadSuccessToast(null), 4000)
     } catch {
       setCounters((prev) => ({
         ...prev,
@@ -77,11 +82,18 @@ export default function TemplatesPage() {
       {/* Background Grid */}
       <div className="pointer-events-none absolute inset-0 tech-grid opacity-20 -z-10" />
 
+      {/* Interactive Template Preview Modal */}
+      <TemplatePreviewModal
+        template={previewTemplate}
+        onClose={() => setPreviewTemplate(null)}
+        onDownload={handleDownload}
+      />
+
       {/* Toast Notification */}
-      {downloadSuccess && (
+      {downloadSuccessToast && (
         <div className="fixed bottom-6 right-6 z-50 bg-panel border border-signal text-foreground px-5 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 animate-fade-in backdrop-blur-xl">
           <CheckCircle2 className="w-5 h-5 text-signal" />
-          <span className="text-sm">Downloaded: <strong className="text-primary">{downloadSuccess}</strong></span>
+          <span className="text-sm">Downloaded: <strong className="text-primary">{downloadSuccessToast}</strong></span>
         </div>
       )}
 
@@ -101,14 +113,14 @@ export default function TemplatesPage() {
         </div>
 
         {/* Aggregate Download Counter Card */}
-        <div className="rounded-2xl panel p-5 shrink-0 text-center lg:text-right">
-          <div className="text-xs font-mono uppercase tracking-wider text-muted">
+        <div className="rounded-2xl panel p-5 shrink-0 text-center lg:text-right font-mono">
+          <div className="text-xs uppercase tracking-wider text-muted">
             Total Community Downloads
           </div>
-          <div className="font-display text-3xl sm:text-4xl font-bold text-signal font-mono mt-0.5">
-            {totalDownloads.toLocaleString()}+
+          <div className="font-display text-3xl sm:text-4xl font-bold text-signal mt-0.5">
+            <AnimatedCounter value={totalDownloads} suffix="+" />
           </div>
-          <div className="text-[11px] text-muted mt-1 flex items-center justify-center lg:justify-end gap-1.5 font-mono">
+          <div className="text-[11px] text-muted mt-1 flex items-center justify-center lg:justify-end gap-1.5">
             <span className="w-1.5 h-1.5 rounded-full bg-signal animate-pulse-node" />
             Real-time Verified Counter
           </div>
@@ -122,9 +134,9 @@ export default function TemplatesPage() {
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-2 rounded-lg text-xs sm:text-sm font-medium transition-all ${
+              className={`px-4 py-2 rounded-lg text-xs sm:text-sm font-mono transition-all ${
                 selectedCategory === cat
-                  ? 'bg-primary text-primary-foreground font-semibold shadow-sm shadow-primary/20'
+                  ? 'bg-primary text-primary-foreground font-semibold shadow-sm'
                   : 'bg-white/[0.04] text-muted hover:text-foreground border border-border'
               }`}
             >
@@ -137,7 +149,7 @@ export default function TemplatesPage() {
           <Search className="w-4 h-4 text-muted absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
-            placeholder="Search templates or fields..."
+            placeholder="Search templates or columns..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-9 pr-4 py-2 text-sm bg-white/[0.03] border border-border rounded-lg text-foreground placeholder:text-muted/50 focus:outline-none focus:ring-1 focus:ring-primary focus:border-primary transition-colors"
@@ -151,9 +163,9 @@ export default function TemplatesPage() {
           const downloadCount = counters[template.id] || template.download_count
 
           return (
-            <article
+            <TiltCard
               key={template.id}
-              className="flex flex-col justify-between rounded-2xl panel p-6 sm:p-7 hover:panel-glow space-y-6"
+              className="p-6 sm:p-7 flex flex-col justify-between space-y-6"
             >
               <div>
                 <div className="flex items-center justify-between gap-2 mb-3">
@@ -191,24 +203,33 @@ export default function TemplatesPage() {
               </div>
 
               {/* Bottom Actions */}
-              <div className="pt-4 border-t border-border/60 flex items-center justify-between gap-4">
+              <div className="pt-4 border-t border-border/60 flex items-center justify-between gap-3">
                 <div className="text-xs font-mono text-muted">
                   <span className="font-bold text-primary">
                     {downloadCount.toLocaleString()}
                   </span> downloads
                 </div>
 
-                <a
-                  href={template.file_url}
-                  download
-                  onClick={() => handleDownload(template.id, template.file_url, template.title)}
-                  className="inline-flex items-center gap-2 rounded-lg btn-signal h-9 px-4 text-xs font-semibold uppercase tracking-wider"
-                >
-                  <ArrowDownToLine className="w-3.5 h-3.5" />
-                  Download (.xlsx)
-                </a>
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => setPreviewTemplate(template as TemplatePreviewData)}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-white/[0.04] px-3 py-1.5 text-xs font-semibold text-muted hover:text-foreground hover:bg-white/[0.08] transition-colors"
+                  >
+                    <Eye className="h-3.5 w-3.5 text-primary" />
+                    Preview
+                  </button>
+                  <a
+                    href={template.file_url}
+                    download
+                    onClick={() => handleDownload(template.id, template.file_url, template.title)}
+                    className="inline-flex items-center gap-1.5 rounded-lg btn-signal h-8 px-3 text-xs font-semibold uppercase tracking-wider"
+                  >
+                    <ArrowDownToLine className="w-3.5 h-3.5" />
+                    Download
+                  </a>
+                </div>
               </div>
-            </article>
+            </TiltCard>
           )
         })}
       </div>
