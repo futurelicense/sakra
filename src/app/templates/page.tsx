@@ -94,7 +94,7 @@ export default function TemplatesPage() {
     ? 'Live from Supabase'
     : loading
       ? 'Loading live counts...'
-      : 'Baseline counts (connect Supabase on Vercel to go live)'
+      : null
 
   return (
     <div className="relative overflow-hidden py-28 md:py-36 max-w-5xl mx-auto px-5 md:px-8 space-y-12">
@@ -143,10 +143,12 @@ export default function TemplatesPage() {
             <div className="font-display text-3xl sm:text-4xl font-bold text-signal mt-0.5">
               <AnimatedCounter value={totalDownloads} suffix="+" />
             </div>
-            <div className="text-[11px] text-muted mt-1 flex items-center justify-center lg:justify-end gap-1.5">
-              <span className="w-1.5 h-1.5 rounded-full bg-signal animate-pulse-node" />
-              {statusLabel}
-            </div>
+            {statusLabel && (
+              <div className="text-[11px] text-muted mt-1 flex items-center justify-center lg:justify-end gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-signal animate-pulse-node" />
+                {statusLabel}
+              </div>
+            )}
           </div>
 
           <div className="rounded-2xl panel p-5 text-center lg:text-right font-mono">

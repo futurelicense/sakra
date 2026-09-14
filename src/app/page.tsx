@@ -814,9 +814,6 @@ export default function HomePage() {
               <p className="mt-1 text-[10px] text-muted uppercase tracking-wider font-mono">
                 Portfolio visits
               </p>
-              <p className="mt-0.5 text-[10px] text-muted-dark font-mono">
-                Seeded baseline · keeps counting
-              </p>
             </div>
           </div>
         </TiltCard>
