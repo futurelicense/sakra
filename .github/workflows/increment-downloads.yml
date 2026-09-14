@@ -1,9 +1,12 @@
 name: Increment live counters
 
-# Rotating hourly drip (UTC hour % 3), handled in scripts/increment-downloads.mjs:
+# Rotating hourly drip (UTC hour % 3):
 #   1) 2 downloads + 1 visit
 #   2) 1 download  + 3 visits
 #   3) 5 downloads + 2 visits
+#
+# Prefers hitting the deployed /api/cron/drip (uses Vercel Supabase env).
+# Falls back to direct Supabase RPC if DRIP_URL is unset.
 
 on:
   schedule:
@@ -18,7 +21,25 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Run rotating download + visit drip
+
+      - name: Drip via deployed API (preferred)
+        id: api
+        continue-on-error: true
+        env:
+          DRIP_URL: ${{ secrets.DRIP_URL }}
+          CRON_SECRET: ${{ secrets.CRON_SECRET }}
+        run: |
+          if [ -z "$DRIP_URL" ] || [ -z "$CRON_SECRET" ]; then
+            echo "DRIP_URL or CRON_SECRET not set — will try direct Supabase fallback"
+            exit 1
+          fi
+          curl -fsS -X POST "$DRIP_URL" \
+            -H "Authorization: Bearer $CRON_SECRET" \
+            -H "Content-Type: application/json" \
+            -d '{}'
+
+      - name: Drip via Supabase RPC (fallback)
+        if: steps.api.outcome != 'success'
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
