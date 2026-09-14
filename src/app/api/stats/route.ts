@@ -1,14 +1,18 @@
 import { NextResponse } from 'next/server'
 import { getMetrics, trackEvent } from '@/lib/metricsStore'
-import { getSupabase, isSupabaseConfigured } from '@/lib/supabase'
+import { getSupabase, isSupabaseConfigured, supabaseConfigHint } from '@/lib/supabase'
 import { isResourceTemplateId } from '@/lib/templateIds'
 
 export const maxDuration = 60
 
 export async function GET() {
   const metrics = await getMetrics()
+  const configured = isSupabaseConfigured()
   return NextResponse.json({
     success: true,
+    supabase_configured: configured,
+    // Non-secret hint only — never returns key/url values
+    supabase_hint: configured ? null : supabaseConfigHint(),
     data: {
       total_visits: metrics.website_visits,
       monthly_visits: metrics.monthly_visits,
