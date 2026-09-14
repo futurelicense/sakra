@@ -23,7 +23,7 @@ function formatCount(value: number | null | undefined) {
 
 export default function TemplatesPage() {
   const { free_templates } = portfolioData.portfolio
-  const { visits, templateDownloads, loading, refresh } = useLiveMetrics()
+  const { visits, templateDownloads, loading, error, refresh } = useLiveMetrics()
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [localCounters, setLocalCounters] = useState<Record<string, number> | null>(null)
@@ -90,11 +90,11 @@ export default function TemplatesPage() {
     return acc + (countFor(curr.id, curr.download_count) ?? 0)
   }, 0)
 
-  const statusLabel = hasLiveCounts
+  const statusLabel = hasLiveCounts && !error
     ? 'Live from Supabase'
     : loading
       ? 'Loading live counts...'
-      : 'Baseline counts'
+      : 'Baseline counts (connect Supabase on Vercel to go live)'
 
   return (
     <div className="relative overflow-hidden py-28 md:py-36 max-w-5xl mx-auto px-5 md:px-8 space-y-12">

@@ -41,8 +41,16 @@ export function useLiveMetrics(options: Options = {}) {
     try {
       const { stats, template_downloads } = await fetchLiveStats()
 
-      if (!hasTemplateCounts(template_downloads) && !stats.total_visits) {
+      // Empty template map means Supabase didn't load (common when Vercel env is missing).
+      // Keep seeded baselines and surface as not-live instead of fake "Live from Supabase".
+      if (!hasTemplateCounts(template_downloads)) {
         setError(true)
+        setMetrics((prev) => ({
+          website_visits: floorVisits(prev?.website_visits ?? stats.total_visits),
+          monthly_visits: Number(prev?.monthly_visits ?? stats.monthly_visits) || 0,
+          unique_visitors: floorUnique(prev?.unique_visitors ?? stats.unique_visitors),
+          template_downloads: floorTemplateDownloads(prev?.template_downloads ?? null),
+        }))
         return null
       }
 

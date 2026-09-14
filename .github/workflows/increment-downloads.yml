@@ -1,5 +1,10 @@
 name: Increment live counters
 
+# Rotating hourly drip (UTC hour % 3), handled in scripts/increment-downloads.mjs:
+#   1) 2 downloads + 1 visit
+#   2) 1 download  + 3 visits
+#   3) 5 downloads + 2 visits
+
 on:
   schedule:
     - cron: "0 * * * *"
@@ -13,10 +18,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Add template downloads + visit drip
+      - name: Run rotating download + visit drip
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
-          COUNT: "2"
-          VISIT_COUNT: "1"
         run: node scripts/increment-downloads.mjs
