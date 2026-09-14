@@ -129,7 +129,7 @@ export function TemplatePreviewModal({
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Header */}
-        <div className="flex items-center justify-between p-5 sm:p-6 border-b border-border/70 bg-white/[0.02]">
+        <div className="flex items-center justify-between p-5 sm:p-6 border-b border-border/70 bg-slate-50">
           <div className="flex items-center gap-3">
             <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-signal/10 text-signal border border-signal/20">
               <FileSpreadsheet className="h-5 w-5" />
@@ -139,7 +139,7 @@ export function TemplatePreviewModal({
                 <span className="text-xs font-mono uppercase tracking-wider text-primary">
                   {template.category}
                 </span>
-                <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-white/[0.04] border border-border text-muted">
+                <span className="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-100 border border-border text-muted">
                   Interactive Sheet Preview
                 </span>
               </div>
@@ -151,7 +151,7 @@ export function TemplatePreviewModal({
 
           <button
             onClick={onClose}
-            className="rounded-lg p-2 text-muted hover:text-foreground hover:bg-white/[0.05] transition-colors"
+            className="rounded-lg p-2 text-muted hover:text-foreground hover:bg-slate-100 transition-colors"
             aria-label="Close modal"
           >
             <X className="h-5 w-5" />
@@ -164,9 +164,9 @@ export function TemplatePreviewModal({
             {template.description}
           </p>
 
-          <div className="rounded-xl border border-border/80 overflow-hidden bg-[#0a0d14]">
+          <div className="rounded-xl border border-border overflow-hidden bg-white shadow-sm">
             {/* Table Mockup Bar */}
-            <div className="flex items-center justify-between px-4 py-2 bg-white/[0.03] border-b border-border text-xs font-mono text-muted">
+            <div className="flex items-center justify-between px-4 py-2 bg-slate-50 border-b border-border text-xs font-mono text-muted">
               <div className="flex items-center gap-2">
                 <span className="inline-block h-2 w-2 rounded-full bg-signal" />
                 <span>Sheet1 · {data.headers.length} Columns · {data.rows.length} Sample Records</span>
@@ -178,18 +178,18 @@ export function TemplatePreviewModal({
             <div className="overflow-x-auto max-h-[46vh]">
               <table className="w-full text-left text-xs font-mono border-collapse">
                 <thead>
-                  <tr className="bg-white/[0.04] border-b border-border text-primary font-semibold">
-                    <th className="p-3 border-r border-border/40 w-12 text-center text-muted-dark">#</th>
+                  <tr className="bg-teal-50 border-b border-border text-primary font-semibold">
+                    <th className="p-3 border-r border-border/60 w-12 text-center text-muted-dark">#</th>
                     {data.headers.map((h, i) => (
-                      <th key={i} className="p-3 border-r border-border/40 whitespace-nowrap">
+                      <th key={i} className="p-3 border-r border-border/60 whitespace-nowrap">
                         {h}
                       </th>
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-border/40 text-muted">
+                <tbody className="divide-y divide-border/60 text-slate-600">
                   {data.rows.map((row, rIdx) => (
-                    <tr key={rIdx} className="hover:bg-white/[0.02] transition-colors">
+                    <tr key={rIdx} className="hover:bg-slate-50 transition-colors">
                       <td className="p-3 border-r border-border/40 text-center text-muted-dark">
                         {rIdx + 1}
                       </td>
@@ -230,7 +230,7 @@ export function TemplatePreviewModal({
         </div>
 
         {/* Modal Footer */}
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 sm:p-6 border-t border-border/70 bg-white/[0.02]">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-5 sm:p-6 border-t border-border/70 bg-slate-50">
           <div className="flex items-center gap-2 text-xs font-mono text-muted">
             <span className="h-1.5 w-1.5 rounded-full bg-signal animate-pulse-node" />
             <span>Ready for Microsoft Excel, Google Sheets, or LibreOffice Calc</span>
@@ -239,13 +239,12 @@ export function TemplatePreviewModal({
           <div className="flex items-center gap-3 w-full sm:w-auto">
             <button
               onClick={onClose}
-              className="flex-1 sm:flex-none rounded-lg border border-border px-4 py-2 text-xs font-semibold uppercase tracking-wider text-muted hover:text-foreground hover:bg-white/[0.04] transition-colors"
+              className="flex-1 sm:flex-none rounded-lg border border-border px-4 py-2 text-xs font-semibold uppercase tracking-wider text-muted hover:text-foreground hover:bg-slate-100 transition-colors"
             >
               Close
             </button>
-            <a
-              href={template.file_url}
-              download
+            <button
+              type="button"
               onClick={() => {
                 onDownload(template.id, template.file_url, template.title)
                 onClose()
@@ -254,7 +253,7 @@ export function TemplatePreviewModal({
             >
               <Download className="h-3.5 w-3.5" />
               Download Spreadsheet (.xlsx)
-            </a>
+            </button>
           </div>
         </div>
       </div>

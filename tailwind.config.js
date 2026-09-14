@@ -5,36 +5,35 @@ module.exports = {
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
-  darkMode: 'class',
   theme: {
     extend: {
       colors: {
-        background: '#0c0f17',
-        foreground: '#f8fafc',
+        background: '#f3f5f8',
+        foreground: '#0f172a',
         panel: {
-          DEFAULT: '#131824',
-          hover: '#181f30',
+          DEFAULT: '#ffffff',
+          hover: '#f8fafc',
         },
         primary: {
-          DEFAULT: '#38bdf8',
-          hover: '#0284c7',
-          glow: '#7dd3fc',
-          foreground: '#082f49',
+          DEFAULT: '#0f766e',
+          hover: '#0d9488',
+          glow: '#14b8a6',
+          foreground: '#ffffff',
         },
         signal: {
-          DEFAULT: '#34d399',
-          glow: '#6ee7b7',
+          DEFAULT: '#059669',
+          glow: '#34d399',
         },
         energy: {
-          DEFAULT: '#f59e0b',
-          glow: '#fbbf24',
+          DEFAULT: '#c2410c',
+          glow: '#ea580c',
         },
         muted: {
-          DEFAULT: '#94a3b8',
-          dark: '#64748b',
+          DEFAULT: '#64748b',
+          dark: '#475569',
         },
-        border: 'rgba(255, 255, 255, 0.08)',
-        input: 'rgba(255, 255, 255, 0.06)',
+        border: 'rgba(15, 23, 42, 0.09)',
+        input: 'rgba(15, 23, 42, 0.06)',
       },
       fontFamily: {
         sans: ['var(--font-sans)', 'system-ui', '-apple-system', 'sans-serif'],

@@ -31,7 +31,11 @@ export default function ResumePage() {
     fetch('/api/analytics', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ event_name: 'resume_download' })
+      body: JSON.stringify({
+        event_name: 'resume_download',
+        path: '/resume',
+        label: 'Curriculum Vitae (PDF)',
+      }),
     }).catch(() => {})
 
     setDownloadSuccess(true)
@@ -79,7 +83,7 @@ export default function ResumePage() {
         <div className="flex items-center gap-2.5">
           <button
             onClick={handlePrint}
-            className="inline-flex items-center gap-2 rounded-lg border border-border bg-white/[0.04] px-4 py-2.5 text-xs font-mono text-muted hover:text-foreground hover:bg-white/[0.08] transition-colors"
+            className="inline-flex items-center gap-2 rounded-lg border border-border bg-slate-100 px-4 py-2.5 text-xs font-mono text-muted hover:text-foreground hover:bg-slate-100 transition-colors"
           >
             <Printer className="w-4 h-4 text-muted" />
             <span>Print</span>
@@ -146,7 +150,7 @@ export default function ResumePage() {
             Education & Doctoral Studies
           </h2>
           <div className="space-y-3 text-sm">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl bg-white/[0.02] border border-border/40">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl bg-slate-50 border border-border/40">
               <div>
                 <strong className="text-foreground text-base font-display">Doctor of Computer Science (DCS)</strong>
                 <div className="text-muted text-xs font-mono">Washington University of Science and Technology (WUST)</div>
@@ -155,7 +159,7 @@ export default function ResumePage() {
                 In Progress (Expected 2026/2027)
               </span>
             </div>
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl bg-white/[0.02] border border-border/40">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl bg-slate-50 border border-border/40">
               <div>
                 <strong className="text-foreground text-base font-display">Master of Science in Information Technology (MSIT)</strong>
                 <div className="text-muted text-xs font-mono">Washington University of Science and Technology (WUST)</div>
@@ -172,25 +176,25 @@ export default function ResumePage() {
             Technical Skills & Competencies
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs sm:text-sm">
-            <div className="p-4 rounded-xl bg-white/[0.02] border border-border/50">
+            <div className="p-4 rounded-xl bg-slate-50 border border-border/50">
               <strong className="text-foreground block mb-1 font-mono uppercase text-xs text-primary">Software QA & Testing:</strong>
               <span className="text-muted leading-relaxed">
                 Manual Testing, Automated Testing, Regression Testing, Test Scenario & Matrix Design, Defect Tracking, UAT, JIRA, Selenium, Playwright
               </span>
             </div>
-            <div className="p-4 rounded-xl bg-white/[0.02] border border-border/50">
+            <div className="p-4 rounded-xl bg-slate-50 border border-border/50">
               <strong className="text-foreground block mb-1 font-mono uppercase text-xs text-primary">Data & Analytics:</strong>
               <span className="text-muted leading-relaxed">
                 SQL, Python, Advanced Microsoft Excel, Tableau, Data Cleansing, Schema Validation, Statistical Anomaly Detection
               </span>
             </div>
-            <div className="p-4 rounded-xl bg-white/[0.02] border border-border/50">
+            <div className="p-4 rounded-xl bg-slate-50 border border-border/50">
               <strong className="text-foreground block mb-1 font-mono uppercase text-xs text-primary">IT Systems & Support:</strong>
               <span className="text-muted leading-relaxed">
                 Hardware & Software Troubleshooting, Network Configuration, User Access Controls, Windows/Linux Environments
               </span>
             </div>
-            <div className="p-4 rounded-xl bg-white/[0.02] border border-border/50">
+            <div className="p-4 rounded-xl bg-slate-50 border border-border/50">
               <strong className="text-foreground block mb-1 font-mono uppercase text-xs text-primary">Operations & Research:</strong>
               <span className="text-muted leading-relaxed">
                 Cross-Functional Team Collaboration, Technical Documentation, Scientific Peer-Reviewed Research Writing
@@ -211,7 +215,7 @@ export default function ResumePage() {
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between">
                   <div>
                     <h3 className="font-display font-bold text-foreground text-base">
-                      {role.role} — <span className="text-primary font-normal">{role.company}</span>
+                      {role.role} - <span className="text-primary font-normal">{role.company}</span>
                     </h3>
                   </div>
                   <span className="text-xs font-mono text-muted">

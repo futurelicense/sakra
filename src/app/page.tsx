@@ -12,30 +12,30 @@ import {
   Download,
   FileSpreadsheet,
   CheckCircle2,
-  TrendingUp,
-  Award,
-  Layers,
-  Sparkles,
   ExternalLink,
   Users,
   Cpu,
-  Mail,
   Send,
   Copy,
   Check,
   Eye,
   SlidersHorizontal,
-  ChevronRight
+  ChevronRight,
+  TrendingUp
 } from 'lucide-react'
 import { TiltCard } from '@/components/TiltCard'
 import { AnimatedCounter } from '@/components/AnimatedCounter'
+import { SectionHeader } from '@/components/SectionHeader'
 import { TemplatePreviewModal, TemplatePreviewData } from '@/components/TemplatePreviewModal'
+import { useLiveMetrics } from '@/hooks/useLiveMetrics'
+import { isResourceTemplateId } from '@/lib/templateIds'
+import { registerDownload, triggerFileDownload } from '@/lib/stats'
 import portfolioData from '@/data/portfolio.json'
 
 export default function HomePage() {
   const { home, owner, free_templates, publications, experience } = portfolioData.portfolio
-  const [liveVisits, setLiveVisits] = useState<number>(1420)
-  const [activeStep, setActiveStep] = useState<number>(0)
+  const { visits, templateDownloads, templateTotal, refresh } = useLiveMetrics()
+  const [localTemplateCounters, setLocalTemplateCounters] = useState<Record<string, number> | null>(null)
   const [activeToolCategory, setActiveToolCategory] = useState<string>('All')
   const [previewTemplate, setPreviewTemplate] = useState<TemplatePreviewData | null>(null)
   const [downloadSuccessToast, setDownloadSuccessToast] = useState<string | null>(null)
@@ -50,15 +50,8 @@ export default function HomePage() {
   })
 
   useEffect(() => {
-    fetch('/api/analytics')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data?.data?.website_visits) {
-          setLiveVisits(data.data.website_visits)
-        }
-      })
-      .catch(() => {})
-  }, [])
+    if (templateDownloads) setLocalTemplateCounters(templateDownloads)
+  }, [templateDownloads])
 
   const handleContactSubmit = (e: React.FormEvent) => {
     e.preventDefault()
@@ -80,14 +73,36 @@ export default function HomePage() {
   }
 
   const handleTemplateDownload = (id: string, fileUrl: string, title: string) => {
-    fetch('/api/analytics', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ event_name: 'template_download', id })
-    }).catch(() => {})
+    triggerFileDownload(fileUrl)
+
+    setLocalTemplateCounters((prev) => {
+      const base = prev ?? {}
+      return { ...base, [id]: (base[id] ?? 0) + 1 }
+    })
+
+    if (isResourceTemplateId(id)) {
+      registerDownload(id)
+        .then((next) => {
+          setLocalTemplateCounters((prev) => ({ ...(prev ?? {}), [id]: next }))
+        })
+        .catch(() => refresh())
+    }
 
     setDownloadSuccessToast(title)
     setTimeout(() => setDownloadSuccessToast(null), 4000)
+  }
+
+  const templateCounters = localTemplateCounters
+  const liveTemplateTotal =
+    templateCounters != null
+      ? free_templates.templates.reduce((acc, tmpl) => acc + (templateCounters[tmpl.id] ?? 0), 0)
+      : templateTotal
+
+  const metricValue = (metric: (typeof home.metrics)[number]) => {
+    if (metric.id === 'website_visits' || metric.dynamic) {
+      return visits
+    }
+    return metric.value
   }
 
   // 5-Step Career Arc modeled after the plain-language storytelling on adeolaaliu.com
@@ -162,145 +177,123 @@ export default function HomePage() {
       : toolsConstellation.filter((t) => t.category === activeToolCategory)
 
   return (
-    <div className="relative overflow-hidden space-y-28 md:space-y-36 pb-28">
-      {/* Interactive Template Preview Modal */}
+    <div className="relative overflow-hidden space-y-24 md:space-y-32 pb-24">
       <TemplatePreviewModal
         template={previewTemplate}
         onClose={() => setPreviewTemplate(null)}
         onDownload={handleTemplateDownload}
       />
 
-      {/* Floating Download Success Toast */}
       {downloadSuccessToast && (
-        <div className="fixed bottom-6 right-6 z-50 bg-panel border border-signal text-foreground px-5 py-3 rounded-xl shadow-2xl flex items-center gap-2.5 animate-fade-in backdrop-blur-xl">
-          <CheckCircle2 className="w-5 h-5 text-signal" />
-          <span className="text-sm">Downloaded: <strong className="text-primary">{downloadSuccessToast}</strong></span>
+        <div className="fixed bottom-6 right-6 z-50 rounded-xl border border-signal/40 bg-panel/95 px-5 py-3 shadow-2xl backdrop-blur-xl flex items-center gap-2.5 animate-fade-in">
+          <CheckCircle2 className="w-5 h-5 text-signal shrink-0" />
+          <span className="text-sm text-foreground">
+            Downloaded: <strong className="text-primary">{downloadSuccessToast}</strong>
+          </span>
         </div>
       )}
 
-      {/* Ambient Engineering Background (Atmospheric Orbs & 72px Tech Grid) */}
+      {/* Ambient background */}
       <div
-        className="pointer-events-none absolute inset-x-0 top-0 -z-10 overflow-hidden h-[125vh] min-h-[850px]"
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 overflow-hidden h-[110vh] min-h-[720px]"
         aria-hidden="true"
       >
-        <div className="absolute inset-0 tech-grid opacity-[0.38]" />
-
-        {/* Atmospheric Drift Glow Orbs */}
-        <div className="absolute left-[6%] top-[10%] h-72 w-72 animate-drift rounded-full bg-primary/20 blur-[110px]" />
-        <div className="absolute right-[8%] top-[24%] h-80 w-80 animate-drift rounded-full bg-energy/15 blur-[120px] [animation-delay:-4s]" />
-        <div className="absolute left-[36%] top-[2%] h-64 w-64 animate-drift rounded-full bg-signal/15 blur-[100px] [animation-delay:-7s]" />
-
-        {/* Orbital SVG Radar / Compass Rings */}
-        <svg
-          viewBox="0 0 100 100"
-          className="absolute right-[5%] top-[8%] h-48 w-48 animate-spin-slow text-primary/20 md:h-72 md:w-72"
-          aria-hidden="true"
-          fill="none"
-          stroke="currentColor"
-        >
-          <circle cx="50" cy="50" r="46" strokeWidth="1.2" strokeDasharray="3 7" strokeLinecap="round" />
-          <circle cx="50" cy="50" r="32" strokeWidth="0.8" strokeDasharray="2 6" strokeLinecap="round" />
-        </svg>
+        <div className="absolute inset-0 tech-grid opacity-[0.45]" />
+        <div className="absolute left-[8%] top-[12%] h-64 w-64 md:h-80 md:w-80 animate-drift rounded-full bg-teal-400/25 blur-[100px]" />
+        <div className="absolute right-[10%] top-[22%] h-72 w-72 md:h-96 md:w-96 animate-drift rounded-full bg-emerald-300/20 blur-[110px] [animation-delay:-5s]" />
+        <div className="absolute left-[40%] top-[6%] h-56 w-56 animate-drift rounded-full bg-orange-300/15 blur-[90px] [animation-delay:-8s]" />
 
         <svg
           viewBox="0 0 100 100"
-          className="absolute right-[8%] top-[12%] h-36 w-36 animate-spin-slow-reverse text-energy/20 md:h-52 md:w-52"
-          aria-hidden="true"
+          className="absolute right-[6%] top-[10%] h-40 w-40 animate-spin-slow text-teal-700/15 md:h-56 md:w-56"
           fill="none"
           stroke="currentColor"
         >
-          <circle cx="50" cy="50" r="46" strokeWidth="1.2" strokeDasharray="4 8" strokeLinecap="round" />
+          <circle cx="50" cy="50" r="46" strokeWidth="1.1" strokeDasharray="3 7" strokeLinecap="round" />
         </svg>
-
-        {/* Floating crosshairs */}
         <svg
-          viewBox="0 0 48 48"
-          className="absolute left-[5%] top-[48%] h-8 w-8 animate-float-slow text-primary/35 md:h-10 md:w-10"
-          aria-hidden="true"
+          viewBox="0 0 100 100"
+          className="absolute right-[9%] top-[14%] h-28 w-28 animate-spin-slow-reverse text-orange-700/12 md:h-40 md:w-40"
           fill="none"
           stroke="currentColor"
         >
-          <path d="M24 4v40M6 14l36 20M42 14 6 34" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+          <circle cx="50" cy="50" r="46" strokeWidth="1.1" strokeDasharray="4 8" strokeLinecap="round" />
         </svg>
 
-        <svg
-          viewBox="0 0 48 48"
-          className="absolute right-[14%] top-[58%] h-7 w-7 animate-float-slow text-energy/35 [animation-delay:-2.5s] md:h-9 md:w-9"
-          aria-hidden="true"
-          fill="none"
-          stroke="currentColor"
-        >
-          <path d="M24 4v40M6 14l36 20M42 14 6 34" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-
-        {/* Smooth bottom fade to background */}
-        <div className="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-b from-transparent to-background" />
+        <div className="absolute inset-x-0 bottom-0 h-[50%] bg-gradient-to-b from-transparent via-background/80 to-background" />
       </div>
 
-      {/* Hero Section */}
-      <section className="relative mx-auto max-w-5xl px-5 pt-32 pb-12 md:px-8 md:pt-40">
-        {/* Eyebrow badge with live pulsing node */}
-        <span className="inline-flex items-center gap-2 rounded-full border border-border bg-white/[0.04] px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.08em] text-primary backdrop-blur-sm animate-fade-in shadow-sm">
+      {/* Hero */}
+      <section className="relative section-shell pt-28 pb-8 md:pt-36">
+        <span className="reveal inline-flex items-center gap-2 rounded-full border border-border bg-white/80 px-3.5 py-1.5 text-[11px] font-mono font-semibold uppercase tracking-[0.09em] text-primary shadow-sm">
           <span className="h-1.5 w-1.5 rounded-full bg-signal animate-pulse-node" />
-          Sakera Begum, MSIT · Doctor of Computer Science Candidate
+          MSIT · Doctor of Computer Science Candidate
         </span>
 
-        {/* Primary bold claim */}
-        <h1 className="mt-5 max-w-4xl font-display text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold leading-[1.08] text-foreground tracking-tight">
-          I help software and data systems <span className="font-accent italic font-normal text-gradient">work reliably</span> at scale.
+        <h1 className="reveal reveal-delay-1 mt-5 max-w-4xl font-display text-[2.35rem] sm:text-5xl md:text-6xl lg:text-[4.1rem] font-bold leading-[1.05] text-foreground tracking-tight">
+          I help software and data systems{' '}
+          <span className="font-accent italic font-normal text-gradient">work reliably</span>{' '}
+          at scale.
         </h1>
 
-        {/* Narrative descriptions */}
-        <p className="mt-6 max-w-2xl text-lg sm:text-xl leading-relaxed text-muted">
-          I am an IT consultant, QA analyst, and data researcher. I work across software quality assurance, test automation, data cleansing, and technical environments. My job is to find defects, validate data accuracy, and verify systems before they reach users.
+        <p className="reveal reveal-delay-2 mt-5 max-w-2xl text-lg md:text-xl leading-relaxed text-muted">
+          QA analyst, data researcher, and IT consultant focused on finding defects early, validating data integrity, and verifying systems before they reach users.
         </p>
 
-        <p className="mt-4 max-w-2xl text-base sm:text-lg leading-relaxed text-muted/80">
-          I combine graduate training in Information Technology with doctoral research in Computer Science, bridging hands-on defect management with predictive machine learning models.
+        <p className="reveal reveal-delay-3 mt-3 max-w-2xl text-base leading-relaxed text-muted/75">
+          Bridging hands-on quality engineering with doctoral research in predictive machine learning for software reliability.
         </p>
 
-        {/* Glowing Action Buttons */}
-        <div className="mt-9 flex flex-wrap items-center gap-3.5">
+        <div className="reveal reveal-delay-4 mt-8 flex flex-wrap items-center gap-3">
           <a
             href="#journey"
-            className="inline-flex items-center justify-center gap-2 rounded-lg btn-signal h-11 px-6 text-sm font-semibold uppercase tracking-wider"
+            className="inline-flex items-center justify-center gap-2 rounded-lg btn-signal h-11 px-5 text-sm font-semibold uppercase tracking-wider"
           >
             See how I got here
             <ArrowDown className="h-4 w-4" />
           </a>
           <Link
             href="/experience"
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-primary/40 bg-primary/5 text-primary hover:bg-primary/10 hover:border-primary/60 transition-all h-11 px-6 text-sm font-semibold uppercase tracking-wider backdrop-blur-sm"
+            className="inline-flex items-center justify-center gap-2 rounded-lg btn-ghost h-11 px-5 text-sm font-semibold uppercase tracking-wider"
           >
-            View my experience
+            View experience
             <ArrowRight className="h-4 w-4" />
           </Link>
           <a
             href="#resources"
-            className="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-white/[0.03] text-muted hover:text-foreground hover:bg-white/[0.06] transition-all h-11 px-5 text-sm font-medium"
+            className="inline-flex items-center justify-center gap-2 rounded-lg btn-quiet h-11 px-4 text-sm font-medium"
           >
             <FileSpreadsheet className="h-4 w-4 text-signal" />
             Free templates
           </a>
         </div>
 
-        {/* 4 Telemetry Metrics Cards with TiltCard 3D & Count-Up animation */}
-        <div className="mt-14 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {home.metrics.map((metric) => {
-            const displayVal = metric.dynamic ? liveVisits : metric.value
+        <div className="mt-12 grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
+          {home.metrics.map((metric, idx) => {
+            const displayVal = metricValue(metric)
+            const isLive = metric.id === 'website_visits' || Boolean(metric.dynamic)
             return (
-              <TiltCard key={metric.id} className="p-6">
-                <div className="font-display text-4xl md:text-5xl font-bold text-primary tracking-tight">
-                  <AnimatedCounter value={displayVal} />
-                  <span className="text-signal text-3xl md:text-4xl">{metric.suffix}</span>
+              <TiltCard
+                key={metric.id}
+                className={`p-5 md:p-6 reveal reveal-delay-${Math.min(idx + 1, 4)}`}
+              >
+                <div className="font-display text-3xl md:text-4xl lg:text-5xl font-bold text-primary tracking-tight tabular-nums">
+                  {typeof displayVal === 'number' ? (
+                    <>
+                      <AnimatedCounter value={displayVal} />
+                      <span className="text-signal text-2xl md:text-3xl lg:text-4xl">{metric.suffix}</span>
+                    </>
+                  ) : (
+                    <span>—</span>
+                  )}
                 </div>
-                <p className="mt-2 text-sm leading-snug text-muted font-medium">
+                <p className="mt-2 text-xs md:text-sm leading-snug text-muted font-medium">
                   {metric.label}
                 </p>
-                {metric.dynamic && (
-                  <span className="mt-2.5 inline-flex items-center gap-1.5 text-[11px] font-mono text-signal uppercase tracking-wider">
+                {isLive && (
+                  <span className="mt-2 inline-flex items-center gap-1.5 text-[10px] font-mono text-signal uppercase tracking-wider">
                     <span className="h-1.5 w-1.5 rounded-full bg-signal animate-pulse-node" />
-                    Live verified counter
+                    Live
                   </span>
                 )}
               </TiltCard>
@@ -309,17 +302,17 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Step-by-Step Career Journey Section ("How I got here") */}
-      <section id="journey" className="mx-auto max-w-5xl scroll-mt-24 px-5 py-12 md:px-8">
-        <header className="mb-10 max-w-3xl">
-          <span className="eyebrow">My Career Arc</span>
-          <h2 className="mt-3 font-display text-3xl md:text-4xl font-bold leading-tight text-foreground">
-            From organizational operations to doctoral computer science.
-          </h2>
-          <p className="mt-4 text-base sm:text-lg leading-relaxed text-muted">
-            My career began in workforce coordination, then expanded step-by-step into frontline IT support, enterprise data validation, software testing, and advanced machine learning research. Each step deepened my ability to find system risks and deliver dependable solutions.
-          </p>
-        </header>
+      <div className="section-shell">
+        <div className="divider-fade" />
+      </div>
+
+      {/* Career journey */}
+      <section id="journey" className="section-shell">
+        <SectionHeader
+          eyebrow="Career Arc"
+          title="From organizational operations to doctoral computer science."
+          description="Each step deepened the ability to spot system risk early - from people and process, through IT support and data quality, into software QA and predictive research."
+        />
 
         {/* Connected Journey List with Interactive Tilt */}
         <ol className="space-y-6 relative">
@@ -359,17 +352,13 @@ export default function HomePage() {
         </ol>
       </section>
 
-      {/* Software & Tools Constellation with Live Tab Filtering */}
-      <section className="mx-auto max-w-5xl scroll-mt-24 px-5 py-12 md:px-8 space-y-8">
-        <header className="max-w-3xl">
-          <span className="eyebrow">Tools & Systems</span>
-          <h2 className="mt-3 font-display text-3xl md:text-4xl font-bold leading-tight text-foreground">
-            Software I work with every day
-          </h2>
-          <p className="mt-4 text-base sm:text-lg leading-relaxed text-muted">
-            From designing test matrices and executing regression suites to writing SQL queries and training defect forecasting models.
-          </p>
-        </header>
+      {/* Tools constellation */}
+      <section className="section-shell space-y-7">
+        <SectionHeader
+          eyebrow="Tools & Systems"
+          title="Software I work with every day"
+          description="From designing test matrices and executing regression suites to writing SQL queries and training defect forecasting models."
+        />
 
         {/* Category Filter Chips */}
         <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
@@ -381,7 +370,7 @@ export default function HomePage() {
               className={`px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-mono transition-all shrink-0 ${
                 activeToolCategory === cat
                   ? 'bg-primary text-primary-foreground font-semibold shadow-sm'
-                  : 'bg-white/[0.04] text-muted hover:text-foreground border border-border'
+                  : 'btn-quiet'
               }`}
             >
               {cat}
@@ -400,7 +389,7 @@ export default function HomePage() {
                 {group.tools.map((tool) => (
                   <li
                     key={tool}
-                    className="group relative rounded-full border border-border bg-white/[0.03] px-3.5 py-1.5 text-xs sm:text-sm font-medium text-muted transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:text-primary hover:bg-primary/5"
+                    className="group relative rounded-full border border-border bg-white px-3.5 py-1.5 text-xs sm:text-sm font-medium text-muted transition-all duration-200 hover:-translate-y-0.5 hover:border-primary/40 hover:text-primary hover:bg-teal-50"
                   >
                     <span className="mr-1.5 inline-block h-1.5 w-1.5 rounded-full bg-signal align-middle transition-colors duration-200" />
                     {tool}
@@ -412,20 +401,49 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Featured Projects / Track Record Section */}
-      <section className="mx-auto max-w-5xl scroll-mt-24 px-5 py-12 md:px-8">
-        <header className="mb-10 max-w-3xl">
-          <span className="eyebrow">Track Record</span>
-          <h2 className="mt-3 font-display text-3xl md:text-4xl font-bold leading-tight text-foreground">
-            Proven outcomes, described in plain language
-          </h2>
-          <p className="mt-4 text-base sm:text-lg leading-relaxed text-muted">
-            A few examples of high-impact work delivered across software testing, data analysis, and technical environments.
-          </p>
-        </header>
+      {/* Track record */}
+      <section className="section-shell">
+        <SectionHeader
+          eyebrow="Track Record"
+          title="Proven outcomes, described in plain language"
+          description="A few examples of high-impact work across software testing, data analysis, and technical environments."
+        />
 
         <div className="grid gap-6 md:grid-cols-2">
-          {/* Card 1: UpSkill Consultancy */}
+          {/* Card: We Sustain Growth / NSCR */}
+          <TiltCard className="p-6 sm:p-8">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <span className="inline-flex items-center gap-2">
+                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
+                  <TrendingUp className="h-4 w-4" />
+                </span>
+                <span className="eyebrow">We Sustain Growth</span>
+              </span>
+              <span className="font-mono text-xs text-muted">Remote · NSCR Platform</span>
+            </div>
+
+            <h3 className="mt-4 font-display text-xl font-bold text-foreground leading-snug">
+              AI Capital Readiness Score Validation
+            </h3>
+            <p className="mt-3 text-sm sm:text-base leading-relaxed text-muted">
+              Validated assessment flows, scoring logic, and founder-facing recommendations for NSCR - an AI-powered platform that evaluates startup funding readiness across investor criteria.
+            </p>
+
+            <div className="mt-5 pt-4 border-t border-border flex items-center justify-between text-xs font-mono text-primary">
+              <span>5 Readiness Dimensions</span>
+              <a
+                href="https://wesustaingrowth.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover:underline inline-flex items-center gap-1"
+              >
+                wesustaingrowth.com
+                <ExternalLink className="h-3 w-3" />
+              </a>
+            </div>
+          </TiltCard>
+
+          {/* Card: UpSkill Consultancy */}
           <TiltCard className="p-6 sm:p-8">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <span className="inline-flex items-center gap-2">
@@ -450,7 +468,7 @@ export default function HomePage() {
             </div>
           </TiltCard>
 
-          {/* Card 2: TaskInspota */}
+          {/* Card: TaskInspota */}
           <TiltCard className="p-6 sm:p-8">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <span className="inline-flex items-center gap-2">
@@ -475,7 +493,7 @@ export default function HomePage() {
             </div>
           </TiltCard>
 
-          {/* Card 3: Publications */}
+          {/* Card: Publications */}
           <TiltCard className="p-6 sm:p-8">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <span className="inline-flex items-center gap-2">
@@ -502,45 +520,16 @@ export default function HomePage() {
               </Link>
             </div>
           </TiltCard>
-
-          {/* Card 4: WUST Campus */}
-          <TiltCard className="p-6 sm:p-8">
-            <div className="flex flex-wrap items-center justify-between gap-3">
-              <span className="inline-flex items-center gap-2">
-                <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
-                  <Terminal className="h-4 w-4" />
-                </span>
-                <span className="eyebrow">Campus Infrastructure</span>
-              </span>
-              <span className="font-mono text-xs text-muted">Vienna, VA · IT Systems</span>
-            </div>
-
-            <h3 className="mt-4 font-display text-xl font-bold text-foreground leading-snug">
-              Frontline Technical Administration & User Support
-            </h3>
-            <p className="mt-3 text-sm sm:text-base leading-relaxed text-muted">
-              Supported 100+ students and administrative staff, maintaining and configuring 75+ workstations, resolving 250+ service tickets, and enforcing institutional security access protocols.
-            </p>
-
-            <div className="mt-5 pt-4 border-t border-border flex items-center justify-between text-xs font-mono text-primary">
-              <span>100+ Users Supported</span>
-              <span>250+ Requests Solved</span>
-            </div>
-          </TiltCard>
         </div>
       </section>
 
-      {/* Free Professional Templates Section (#resources) */}
-      <section id="resources" className="mx-auto max-w-5xl scroll-mt-24 px-5 py-12 md:px-8">
-        <header className="mb-10 max-w-3xl">
-          <span className="eyebrow">Free Downloads</span>
-          <h2 className="mt-3 font-display text-3xl md:text-4xl font-bold leading-tight text-foreground">
-            Free QA & analytics templates you can use today
-          </h2>
-          <p className="mt-4 text-base sm:text-lg leading-relaxed text-muted">
-            Structured worksheets and checklists I use to design test matrices, track defects, and audit enterprise data. Preview the spreadsheet layout or download directly.
-          </p>
-        </header>
+      {/* Free templates */}
+      <section id="resources" className="section-shell">
+        <SectionHeader
+          eyebrow="Free Downloads"
+          title="QA & analytics templates you can use today"
+          description="Structured worksheets for test matrices, defect tracking, and data audits. Preview the layout or download directly."
+        />
 
         <div className="grid gap-6 md:grid-cols-2">
           {free_templates.templates.map((tmpl) => (
@@ -561,13 +550,13 @@ export default function HomePage() {
                   {tmpl.description}
                 </p>
 
-                <div className="mt-4 p-3 rounded-lg bg-white/[0.02] border border-border/60">
+                <div className="mt-4 p-3 rounded-lg surface-soft">
                   <span className="text-[11px] font-mono uppercase tracking-wider text-muted-dark block mb-1">
                     Columns included ({tmpl.includes.length}):
                   </span>
                   <div className="flex flex-wrap gap-1.5 text-xs text-muted">
                     {tmpl.includes.slice(0, 5).map((col) => (
-                      <span key={col} className="bg-white/[0.04] px-2 py-0.5 rounded border border-border/40">
+                      <span key={col} className="bg-white px-2 py-0.5 rounded border border-border">
                         {col}
                       </span>
                     ))}
@@ -582,23 +571,24 @@ export default function HomePage() {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setPreviewTemplate(tmpl as TemplatePreviewData)}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-white/[0.04] px-3 py-1.5 text-xs font-semibold text-muted hover:text-foreground hover:bg-white/[0.08] transition-colors"
+                    className="inline-flex items-center gap-1.5 rounded-lg btn-quiet px-3 py-1.5 text-xs font-semibold"
                   >
                     <Eye className="h-3.5 w-3.5 text-primary" />
                     Preview
                   </button>
-                  <a
-                    href={tmpl.file_url}
-                    download
+                  <button
+                    type="button"
                     onClick={() => handleTemplateDownload(tmpl.id, tmpl.file_url, tmpl.title)}
                     className="inline-flex items-center gap-1.5 rounded-lg btn-signal h-8 px-3 text-xs font-semibold uppercase tracking-wider"
                   >
                     <Download className="h-3.5 w-3.5" />
                     Download
-                  </a>
+                  </button>
                 </div>
                 <span className="text-xs font-mono text-muted">
-                  {tmpl.download_count} downloads
+                  {templateCounters && typeof templateCounters[tmpl.id] === 'number'
+                    ? `${templateCounters[tmpl.id].toLocaleString()} downloads`
+                    : '— downloads'}
                 </span>
               </div>
             </TiltCard>
@@ -609,23 +599,24 @@ export default function HomePage() {
         <div className="mt-8 rounded-xl panel p-4 text-center">
           <p className="text-sm font-mono text-muted">
             <span className="text-primary font-bold">
-              <AnimatedCounter value={free_templates.aggregate_metrics.total_downloads} />+
+              {typeof liveTemplateTotal === 'number' ? (
+                <AnimatedCounter value={liveTemplateTotal} />
+              ) : (
+                '—'
+              )}
+              +
             </span> professional templates downloaded by QA testers & data analysts so far
           </p>
         </div>
       </section>
 
-      {/* Network Node & Interactive Contact Section */}
-      <section className="mx-auto max-w-5xl scroll-mt-24 px-5 py-12 md:px-8">
-        <header className="mb-10 max-w-3xl">
-          <span className="eyebrow">Connect</span>
-          <h2 className="mt-3 font-display text-3xl md:text-4xl font-bold leading-tight text-foreground">
-            Let&#39;s start a conversation
-          </h2>
-          <p className="mt-4 text-base sm:text-lg leading-relaxed text-muted">
-            Whether you have an open QA or analytics consulting role, need test-suite review, or want to collaborate on doctoral computer science research.
-          </p>
-        </header>
+      {/* Contact */}
+      <section className="section-shell">
+        <SectionHeader
+          eyebrow="Connect"
+          title="Let's start a conversation"
+          description="Open to QA consulting, analytics reviews, or doctoral research collaboration."
+        />
 
         <div className="grid gap-8 lg:grid-cols-[0.85fr_1fr]">
           {/* Left: Telemetry Node Panel */}
@@ -671,11 +662,11 @@ export default function HomePage() {
           </TiltCard>
 
           {/* Right: Contact Form */}
-          <form onSubmit={handleContactSubmit} className="rounded-2xl panel p-6 md:p-8 hover:panel-glow">
+          <form onSubmit={handleContactSubmit} className="rounded-2xl panel p-6 md:p-8">
             {formSubmitted && (
               <div className="mb-6 p-4 rounded-xl bg-signal/10 border border-signal/30 text-signal text-sm flex items-center gap-2 animate-fade-in">
                 <CheckCircle2 className="h-5 w-5 shrink-0" />
-                <span>Thank you! Your message has been received. I will respond promptly.</span>
+                <span>Thank you - your message has been received.</span>
               </div>
             )}
 
@@ -690,8 +681,8 @@ export default function HomePage() {
                   required
                   value={contactData.name}
                   onChange={(e) => setContactData({ ...contactData, name: e.target.value })}
-                  placeholder="Your Name"
-                  className="h-10 w-full rounded-lg border border-border bg-white/[0.03] px-3.5 py-1 text-sm text-foreground placeholder:text-muted/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors"
+                  placeholder="Your name"
+                  className="field h-10 px-3.5 text-sm"
                 />
               </div>
 
@@ -706,33 +697,33 @@ export default function HomePage() {
                   value={contactData.email}
                   onChange={(e) => setContactData({ ...contactData, email: e.target.value })}
                   placeholder="you@domain.com"
-                  className="h-10 w-full rounded-lg border border-border bg-white/[0.03] px-3.5 py-1 text-sm text-foreground placeholder:text-muted/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors"
+                  className="field h-10 px-3.5 text-sm"
                 />
               </div>
 
               <div className="space-y-1.5 sm:col-span-2">
                 <label className="text-xs font-mono uppercase tracking-wider text-muted block" htmlFor="organization">
-                  Organization / Company
+                  Organization
                 </label>
                 <input
                   id="organization"
                   type="text"
                   value={contactData.organization}
                   onChange={(e) => setContactData({ ...contactData, organization: e.target.value })}
-                  placeholder="Company, University or Team"
-                  className="h-10 w-full rounded-lg border border-border bg-white/[0.03] px-3.5 py-1 text-sm text-foreground placeholder:text-muted/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors"
+                  placeholder="Company, university, or team"
+                  className="field h-10 px-3.5 text-sm"
                 />
               </div>
 
               <div className="space-y-1.5 sm:col-span-2">
                 <label className="text-xs font-mono uppercase tracking-wider text-muted block" htmlFor="reason">
-                  Topic / Inquiry *
+                  Topic *
                 </label>
                 <select
                   id="reason"
                   value={contactData.reason}
                   onChange={(e) => setContactData({ ...contactData, reason: e.target.value })}
-                  className="h-10 w-full rounded-lg border border-border bg-[#141926] px-3.5 py-1 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors"
+                  className="field h-10 px-3.5 text-sm bg-white"
                 >
                   <option value="Software Quality Assurance">Software Quality Assurance / Testing</option>
                   <option value="Data Analytics & Cleansing">Data Analytics & Cleansing</option>
@@ -753,7 +744,7 @@ export default function HomePage() {
                   value={contactData.message}
                   onChange={(e) => setContactData({ ...contactData, message: e.target.value })}
                   placeholder="Tell me about your project, timeline, or research topic..."
-                  className="w-full rounded-lg border border-border bg-white/[0.03] p-3.5 text-sm text-foreground placeholder:text-muted/50 focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-colors"
+                  className="field p-3.5 text-sm min-h-[110px]"
                 />
               </div>
             </div>
@@ -769,49 +760,51 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Closing Statement Panel */}
-      <section className="mx-auto max-w-5xl px-5 pb-10 md:px-8">
-        <TiltCard className="p-8 text-center md:p-12">
+      {/* Closing */}
+      <section className="section-shell pb-6">
+        <TiltCard className="p-8 text-center md:p-12" disableTilt>
           <h2 className="mx-auto max-w-2xl font-display text-3xl md:text-4xl font-bold leading-tight text-foreground">
-            Reliable technology isn&#39;t an accident. <span className="font-accent italic text-gradient font-normal">It is verified.</span>
+            Reliable technology isn&#39;t an accident.{' '}
+            <span className="font-accent italic text-gradient font-normal">It is verified.</span>
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-base sm:text-lg leading-relaxed text-muted">
-            Quality software and trustworthy data come from asking the hard questions early, building structured test suites, and holding systems to rigorous standards.
+          <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-muted">
+            Quality software and trustworthy data come from structured testing, early risk detection, and rigorous validation.
           </p>
 
           <div className="mt-8 flex flex-wrap justify-center gap-3">
             <Link
               href="/experience"
-              className="inline-flex items-center justify-center gap-2 rounded-lg btn-signal h-10 px-6 text-xs font-semibold uppercase tracking-wider"
+              className="inline-flex items-center justify-center gap-2 rounded-lg btn-signal h-10 px-5 text-xs font-semibold uppercase tracking-wider"
             >
-              View My Experience
+              View Experience
               <ArrowRight className="h-4 w-4" />
             </Link>
             <Link
               href="/publications"
-              className="inline-flex items-center justify-center gap-2 rounded-lg border border-primary/40 bg-primary/5 text-primary hover:bg-primary/10 transition-all h-10 px-6 text-xs font-semibold uppercase tracking-wider"
+              className="inline-flex items-center justify-center gap-2 rounded-lg btn-ghost h-10 px-5 text-xs font-semibold uppercase tracking-wider"
             >
-              Read My Publications
+              Publications
             </Link>
-            <a
-              href={owner.linkedin_url}
-              target="_blank"
-              rel="noreferrer noopener"
-              className="inline-flex items-center justify-center gap-2 rounded-lg border border-border bg-white/[0.03] text-muted hover:text-foreground hover:bg-white/[0.06] transition-all h-10 px-6 text-xs font-medium"
-            >
-              Connect on LinkedIn
-              <ExternalLink className="h-3.5 w-3.5" />
-            </a>
+            {owner.linkedin_url && (
+              <a
+                href={owner.linkedin_url}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="inline-flex items-center justify-center gap-2 rounded-lg btn-quiet h-10 px-5 text-xs font-medium"
+              >
+                LinkedIn
+                <ExternalLink className="h-3.5 w-3.5" />
+              </a>
+            )}
           </div>
 
-          {/* Site visits badge */}
-          <div className="mx-auto mt-10 max-w-xs">
-            <div className="rounded-xl border border-border bg-white/[0.02] px-6 py-4 text-center">
-              <p className="font-display text-3xl font-bold text-primary font-mono">
-                <AnimatedCounter value={liveVisits} />+
+          <div className="mx-auto mt-10 max-w-[11rem]">
+            <div className="rounded-xl border border-border bg-white px-5 py-4 text-center shadow-sm">
+              <p className="font-display text-3xl font-bold text-primary tabular-nums">
+                {typeof visits === 'number' ? <AnimatedCounter value={visits} /> : '—'}+
               </p>
-              <p className="mt-1 text-xs text-muted uppercase tracking-wider font-mono">
-                Visits to this portfolio so far
+              <p className="mt-1 text-[10px] text-muted uppercase tracking-wider font-mono">
+                Portfolio visits
               </p>
             </div>
           </div>

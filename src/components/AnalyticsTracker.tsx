@@ -2,20 +2,19 @@
 
 import { useEffect } from 'react'
 import { usePathname } from 'next/navigation'
+import { registerVisit } from '@/lib/stats'
 
+/**
+ * Registers one site visit per browser tab session (homepage or any public page).
+ * Skips /admin. Does not count on refresh within the same tab.
+ */
 export function AnalyticsTracker() {
   const pathname = usePathname()
 
   useEffect(() => {
-    // Record page visit
-    fetch('/api/analytics', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        event_name: 'website_visit',
-        path: pathname
-      })
-    }).catch(() => {})
+    if (!pathname || pathname.startsWith('/admin')) return
+
+    registerVisit().catch(() => {})
   }, [pathname])
 
   return null

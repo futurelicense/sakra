@@ -1,35 +1,45 @@
 'use client'
 
-import React, { useRef, useState, useCallback } from 'react'
+import React, { useRef, useState, useCallback, useEffect } from 'react'
 
 interface TiltCardProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode
   className?: string
   glowColor?: string
   maxTilt?: number
+  disableTilt?: boolean
 }
 
 export function TiltCard({
   children,
   className = '',
-  glowColor = 'rgba(56, 189, 248, 0.15)',
-  maxTilt = 6,
+  glowColor = 'rgba(15, 118, 110, 0.12)',
+  maxTilt = 4.5,
+  disableTilt = false,
   ...props
 }: TiltCardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
-  const [transform, setTransform] = useState('perspective(1000px) rotateX(0deg) rotateY(0deg)')
+  const [transform, setTransform] = useState('perspective(1100px) rotateX(0deg) rotateY(0deg)')
   const [spotlight, setSpotlight] = useState({ x: 50, y: 50, opacity: 0 })
+  const [reducedMotion, setReducedMotion] = useState(false)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    setReducedMotion(mq.matches)
+    const onChange = () => setReducedMotion(mq.matches)
+    mq.addEventListener('change', onChange)
+    return () => mq.removeEventListener('change', onChange)
+  }, [])
 
   const handleMouseMove = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
-      if (!cardRef.current) return
+      if (!cardRef.current || disableTilt || reducedMotion) return
       const rect = cardRef.current.getBoundingClientRect()
       const x = e.clientX - rect.left
       const y = e.clientY - rect.top
 
       const percentX = (x / rect.width) * 100
       const percentY = (y / rect.height) * 100
-
       const centerX = rect.width / 2
       const centerY = rect.height / 2
 
@@ -37,15 +47,15 @@ export function TiltCard({
       const rotateY = ((x - centerX) / centerX) * maxTilt
 
       setTransform(
-        `perspective(1000px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) scale3d(1.01, 1.01, 1.01)`
+        `perspective(1100px) rotateX(${rotateX.toFixed(2)}deg) rotateY(${rotateY.toFixed(2)}deg) translateY(-2px)`
       )
       setSpotlight({ x: percentX, y: percentY, opacity: 1 })
     },
-    [maxTilt]
+    [maxTilt, disableTilt, reducedMotion]
   )
 
   const handleMouseLeave = useCallback(() => {
-    setTransform('perspective(1000px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)')
+    setTransform('perspective(1100px) rotateX(0deg) rotateY(0deg) translateY(0)')
     setSpotlight((prev) => ({ ...prev, opacity: 0 }))
   }, [])
 
@@ -55,26 +65,26 @@ export function TiltCard({
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{
-        transform,
-        transition: 'transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s ease',
+        transform: disableTilt || reducedMotion ? undefined : transform,
+        transition: 'transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease',
+        willChange: disableTilt || reducedMotion ? undefined : 'transform',
       }}
-      className={`group relative overflow-hidden rounded-2xl panel p-6 hover:panel-glow ${className}`}
+      className={`group relative overflow-hidden rounded-2xl panel ${className}`}
       {...props}
     >
-      {/* Interactive cursor tracking spotlight glow */}
       <div
-        className="pointer-events-none absolute -inset-px rounded-2xl transition-opacity duration-300"
+        className="pointer-events-none absolute -inset-px rounded-2xl transition-opacity duration-400"
         style={{
-          opacity: spotlight.opacity,
-          background: `radial-gradient(circle at ${spotlight.x}% ${spotlight.y}%, ${glowColor}, transparent 65%)`,
+          opacity: spotlight.opacity * 0.9,
+          background: `radial-gradient(circle at ${spotlight.x}% ${spotlight.y}%, ${glowColor}, transparent 62%)`,
         }}
         aria-hidden="true"
       />
-
-      {/* Tilt card inner content */}
-      <div className="relative z-10 transition-transform duration-200">
-        {children}
-      </div>
+      <div
+        className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-teal-700/20 to-transparent"
+        aria-hidden="true"
+      />
+      <div className="relative z-10">{children}</div>
     </div>
   )
 }

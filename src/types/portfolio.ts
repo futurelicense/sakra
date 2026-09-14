@@ -81,6 +81,15 @@ export interface PortfolioData {
     experience: {
       page_title: string
       page_subtitle: string
+      featured_work?: {
+        id: string
+        organization: string
+        title: string
+        website: string
+        summary: string
+        tags: string[]
+        highlights: string[]
+      }[]
       roles: {
         id: string
         company: string

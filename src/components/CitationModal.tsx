@@ -66,7 +66,7 @@ export function CitationModal({ publication, onClose }: CitationModalProps) {
         className="relative w-full max-w-2xl rounded-2xl panel border border-border shadow-2xl overflow-hidden"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between p-5 border-b border-border/70 bg-white/[0.02]">
+        <div className="flex items-center justify-between p-5 border-b border-border/70 bg-slate-50">
           <div className="flex items-center gap-3">
             <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
               <Quote className="h-4 w-4" />
@@ -82,7 +82,7 @@ export function CitationModal({ publication, onClose }: CitationModalProps) {
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-1.5 text-muted hover:text-foreground hover:bg-white/[0.05] transition-colors"
+            className="rounded-lg p-1.5 text-muted hover:text-foreground hover:bg-slate-100 transition-colors"
           >
             <X className="h-5 w-5" />
           </button>
@@ -97,7 +97,7 @@ export function CitationModal({ publication, onClose }: CitationModalProps) {
                 className={`px-3 py-1.5 rounded-lg text-xs font-mono font-medium transition-all ${
                   activeFormat === fmt
                     ? 'bg-primary text-primary-foreground font-semibold'
-                    : 'bg-white/[0.03] text-muted hover:text-foreground border border-border/60'
+                    : 'bg-white text-muted hover:text-foreground border border-border/60'
                 }`}
               >
                 {fmt}
@@ -105,12 +105,12 @@ export function CitationModal({ publication, onClose }: CitationModalProps) {
             ))}
           </div>
 
-          <div className="p-4 rounded-xl bg-[#0a0d14] border border-border/80 font-mono text-xs text-muted leading-relaxed select-all overflow-x-auto whitespace-pre-wrap">
+          <div className="p-4 rounded-xl bg-slate-50 border border-border font-mono text-slate-700 text-xs text-muted leading-relaxed select-all overflow-x-auto whitespace-pre-wrap">
             {currentText}
           </div>
         </div>
 
-        <div className="flex items-center justify-between p-5 border-t border-border/70 bg-white/[0.02]">
+        <div className="flex items-center justify-between p-5 border-t border-border/70 bg-slate-50">
           <span className="text-xs font-mono text-muted">
             {copied ? 'Citation copied to clipboard!' : 'Click copy to paste into references'}
           </span>

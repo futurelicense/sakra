@@ -26,10 +26,6 @@
       {
         "label": "Free Templates",
         "path": "/templates"
-      },
-      {
-        "label": "LinkedIn",
-        "path": "/linkedin"
       }
     ],
     "home": {
@@ -39,7 +35,7 @@
         "headline": "Transforming data, technology, and software quality into reliable business outcomes.",
         "description": "IT and data professional with experience across software quality assurance, data analytics, technical support, and business operations. Focused on building reliable systems, improving data quality, identifying technology risks, and translating complex information into actionable insights.",
         "primary_cta": {
-          "label": "Explore My Work",
+          "label": "View Experience",
           "target": "/experience"
         },
         "secondary_cta": {
@@ -48,7 +44,7 @@
         },
         "tertiary_cta": {
           "label": "Connect on LinkedIn",
-          "target": "/linkedin"
+          "target": "https://www.linkedin.com/in/sakera-begum"
         }
       },
       "metrics": [
@@ -73,7 +69,7 @@
         {
           "id": "website_visits",
           "label": "Website Visits",
-          "value": 1420,
+          "value": 1462,
           "suffix": "+",
           "dynamic": true,
           "increment_on": "unique_page_visit",
@@ -166,6 +162,27 @@
     "experience": {
       "page_title": "Professional Experience",
       "page_subtitle": "A track record across software quality assurance, data analytics, technical support, and organizational operations.",
+      "featured_work": [
+        {
+          "id": "we-sustain-growth",
+          "organization": "We Sustain Growth",
+          "title": "Startup Capital Assessment (NSCR)",
+          "website": "https://wesustaingrowth.com/",
+          "summary": "Product validation and quality assurance support for NSCR - an AI-powered platform that evaluates startup funding readiness across investor criteria, producing a Capital Readiness Score, AI analysis, and actionable recommendations for founders.",
+          "tags": [
+            "Capital Readiness",
+            "AI Assessment",
+            "Product Validation",
+            "Startup Technology"
+          ],
+          "highlights": [
+            "Validated end-to-end assessment flows from founder intake through score generation and recommendation delivery.",
+            "Tested scoring consistency across five investor-aligned readiness dimensions, including edge cases and output clarity.",
+            "Reviewed capital readiness scorecards, AI narrative evaluation, and founder-facing recommendation modules before release.",
+            "Logged and retested product defects related to scoring logic, result presentation, and assessment workflows."
+          ]
+        }
+      ],
       "roles": [
         {
           "id": "upskill-consultancy",
@@ -451,7 +468,7 @@
             "Defect Reference"
           ],
           "file_url": "/downloads/software-qa-test-case-template.xlsx",
-          "download_count": 184,
+          "download_count": 188,
           "counter_type": "incremental",
           "increment_on": "successful_download",
           "featured": true
@@ -477,7 +494,7 @@
             "Retest Result"
           ],
           "file_url": "/downloads/software-defect-bug-tracker.xlsx",
-          "download_count": 142,
+          "download_count": 146,
           "counter_type": "incremental",
           "increment_on": "successful_download",
           "featured": true
@@ -502,7 +519,7 @@
             "Data Readiness Assessment"
           ],
           "file_url": "/downloads/data-quality-validation-checklist.xlsx",
-          "download_count": 219,
+          "download_count": 223,
           "counter_type": "incremental",
           "increment_on": "successful_download",
           "featured": true
@@ -527,14 +544,14 @@
             "Deliverables"
           ],
           "file_url": "/downloads/data-analysis-project-tracker.xlsx",
-          "download_count": 165,
+          "download_count": 167,
           "counter_type": "incremental",
           "increment_on": "successful_download",
           "featured": true
         }
       ],
       "aggregate_metrics": {
-        "total_downloads": 710,
+        "total_downloads": 724,
         "dynamic": true,
         "calculation": "sum(template.download_count)"
       }
@@ -741,10 +758,6 @@
         {
           "label": "Free Templates",
           "target": "/templates"
-        },
-        {
-          "label": "LinkedIn",
-          "target": "/linkedin"
         }
       ],
       "social_links": {

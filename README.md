@@ -1,4 +1,4 @@
-# Sakera Begum — IT Consultant & QA Analyst Portfolio
+# Sakera Begum - IT Consultant & QA Analyst Portfolio
 
 A high-performance modern web application built from the portfolio specification for **Sakera Begum** (Doctor of Computer Science researcher, IT Consultant, Data Analyst, and Software Quality Assurance specialist).
 
@@ -11,6 +11,7 @@ A high-performance modern web application built from the portfolio specification
 - **Interactive Resume (`/resume`)**: Formatted CV with executive summary, competencies, education, and single-click PDF export.
 - **LinkedIn Hub (`/linkedin`)**: Direct social connections and curated thought leadership previews.
 - **Analytics API (`/api/analytics`)**: Endpoints for tracking page visits, template downloads, publication citations, and resume downloads.
+- **Admin dashboard (`/admin`)**: Live counters for portfolio visits, page views, paper reads, resume/template/PDF downloads, plus a download log with dummy IP addresses (in-memory until Supabase is wired).
 - **Supabase / Postgres Ready**: Complete SQL schema included in `supabase/schema.sql` for instant database synchronization.
 
 ## Tech Stack
@@ -33,11 +34,16 @@ npm run dev
 ```
 Open [http://localhost:3000](http://localhost:3000) to view the application.
 
-### 3. Build for production
+Admin dashboard: [http://localhost:3000/admin](http://localhost:3000/admin)  
+Login: username `admin` / password from `ADMIN_PASSWORD` in `.env`
+
+### 3. Supabase setup (required for persistent analytics)
+1. Copy `.env.example` to `.env` and set `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `ADMIN_USERNAME`, `ADMIN_PASSWORD`.
+2. In the Supabase SQL Editor, run the full script in `supabase/schema.sql`.
+3. Restart `npm run dev`. The admin dashboard should show **Supabase** as the storage backend.
+
+### 4. Build for production
 ```bash
 npm run build
 npm run start
 ```
-
-### 4. Optional Supabase Database Setup
-Execute `supabase/schema.sql` in your Supabase SQL Editor to provision persistent database tables for site metrics, templates, downloads, and publications.
