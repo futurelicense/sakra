@@ -23,7 +23,7 @@ function formatCount(value: number | null | undefined) {
 
 export default function TemplatesPage() {
   const { free_templates } = portfolioData.portfolio
-  const { templateDownloads, templateTotal, refresh } = useLiveMetrics()
+  const { visits, templateDownloads, loading, refresh } = useLiveMetrics()
   const [selectedCategory, setSelectedCategory] = useState<string>('All')
   const [searchQuery, setSearchQuery] = useState<string>('')
   const [localCounters, setLocalCounters] = useState<Record<string, number> | null>(null)
@@ -35,10 +35,15 @@ export default function TemplatesPage() {
   }, [templateDownloads])
 
   const counters = localCounters
+  const hasLiveCounts =
+    counters != null &&
+    free_templates.templates.some((t) => typeof counters[t.id] === 'number')
+
   const countFor = useCallback(
-    (templateId: string) => {
-      if (!counters || typeof counters[templateId] !== 'number') return null
-      return counters[templateId]
+    (templateId: string, fallback?: number) => {
+      if (counters && typeof counters[templateId] === 'number') return counters[templateId]
+      if (typeof fallback === 'number') return fallback
+      return null
     },
     [counters]
   )
@@ -50,13 +55,19 @@ export default function TemplatesPage() {
 
     setLocalCounters((prev) => {
       const base = prev ?? {}
-      return { ...base, [templateId]: (base[templateId] ?? 0) + 1 }
+      const current =
+        typeof base[templateId] === 'number'
+          ? base[templateId]
+          : free_templates.templates.find((t) => t.id === templateId)?.download_count ?? 0
+      return { ...base, [templateId]: current + 1 }
     })
 
     if (isResourceTemplateId(templateId)) {
       try {
         const next = await registerDownload(templateId)
-        setLocalCounters((prev) => ({ ...(prev ?? {}), [templateId]: next }))
+        if (next > 0) {
+          setLocalCounters((prev) => ({ ...(prev ?? {}), [templateId]: next }))
+        }
       } catch {
         await refresh()
       }
@@ -75,10 +86,15 @@ export default function TemplatesPage() {
     return matchesCat && matchesQuery
   })
 
-  const totalDownloads =
-    counters != null
-      ? free_templates.templates.reduce((acc, curr) => acc + (counters[curr.id] ?? 0), 0)
-      : templateTotal
+  const totalDownloads = free_templates.templates.reduce((acc, curr) => {
+    return acc + (countFor(curr.id, curr.download_count) ?? 0)
+  }, 0)
+
+  const statusLabel = hasLiveCounts
+    ? 'Live from Supabase'
+    : loading
+      ? 'Loading live counts...'
+      : 'Baseline counts'
 
   return (
     <div className="relative overflow-hidden py-28 md:py-36 max-w-5xl mx-auto px-5 md:px-8 space-y-12">
@@ -89,7 +105,8 @@ export default function TemplatesPage() {
           previewTemplate
             ? {
                 ...previewTemplate,
-                download_count: countFor(previewTemplate.id) ?? 0,
+                download_count:
+                  countFor(previewTemplate.id, previewTemplate.download_count) ?? 0,
               }
             : null
         }
@@ -120,18 +137,34 @@ export default function TemplatesPage() {
           </p>
         </div>
 
-        <div className="rounded-2xl panel p-5 shrink-0 text-center lg:text-right font-mono">
-          <div className="text-xs uppercase tracking-wider text-muted">Total Community Downloads</div>
-          <div className="font-display text-3xl sm:text-4xl font-bold text-signal mt-0.5">
-            {typeof totalDownloads === 'number' ? (
+        <div className="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0">
+          <div className="rounded-2xl panel p-5 text-center lg:text-right font-mono">
+            <div className="text-xs uppercase tracking-wider text-muted">Total Community Downloads</div>
+            <div className="font-display text-3xl sm:text-4xl font-bold text-signal mt-0.5">
               <AnimatedCounter value={totalDownloads} suffix="+" />
-            ) : (
-              '—'
-            )}
+            </div>
+            <div className="text-[11px] text-muted mt-1 flex items-center justify-center lg:justify-end gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-signal animate-pulse-node" />
+              {statusLabel}
+            </div>
           </div>
-          <div className="text-[11px] text-muted mt-1 flex items-center justify-center lg:justify-end gap-1.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-signal animate-pulse-node" />
-            {counters ? 'Live from Supabase' : 'Loading live counts...'}
+
+          <div className="rounded-2xl panel p-5 text-center lg:text-right font-mono">
+            <div className="text-xs uppercase tracking-wider text-muted flex items-center justify-center lg:justify-end gap-1.5">
+              <Eye className="w-3.5 h-3.5 text-primary" />
+              Portfolio Views
+            </div>
+            <div className="font-display text-3xl sm:text-4xl font-bold text-primary mt-0.5">
+              {typeof visits === 'number' ? (
+                <AnimatedCounter value={visits} />
+              ) : (
+                '—'
+              )}
+            </div>
+            <div className="text-[11px] text-muted mt-1 flex items-center justify-center lg:justify-end gap-1.5">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary animate-pulse-node" />
+              {typeof visits === 'number' ? 'Live session visits' : 'Loading views...'}
+            </div>
           </div>
         </div>
       </div>
@@ -167,7 +200,7 @@ export default function TemplatesPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {filteredTemplates.map((template) => {
-          const downloadCount = countFor(template.id)
+          const downloadCount = countFor(template.id, template.download_count)
 
           return (
             <TiltCard key={template.id} className="p-6 sm:p-7 flex flex-col justify-between space-y-6">

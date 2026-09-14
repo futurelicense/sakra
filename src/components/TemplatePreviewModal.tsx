@@ -11,7 +11,7 @@ export interface TemplatePreviewData {
   format: string[]
   file_url: string
   includes: string[]
-  download_count: number
+  download_count?: number
 }
 
 // Pre-configured realistic spreadsheet preview rows

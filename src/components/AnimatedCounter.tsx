@@ -21,6 +21,7 @@ export function AnimatedCounter({
   const elementRef = useRef<HTMLSpanElement>(null)
   const started = useRef(false)
   const displayRef = useRef(0)
+  const rafRef = useRef<number | null>(null)
 
   useEffect(() => {
     displayRef.current = displayValue
@@ -28,7 +29,12 @@ export function AnimatedCounter({
 
   useEffect(() => {
     const animateTo = (target: number, ms: number) => {
+      if (rafRef.current != null) cancelAnimationFrame(rafRef.current)
       const from = displayRef.current
+      if (from === target) {
+        setDisplayValue(target)
+        return
+      }
       let startTime: number | null = null
       const step = (timestamp: number) => {
         if (!startTime) startTime = timestamp
@@ -37,13 +43,14 @@ export function AnimatedCounter({
         const next = Math.floor(from + (target - from) * ease)
         displayRef.current = next
         setDisplayValue(next)
-        if (progress < 1) requestAnimationFrame(step)
+        if (progress < 1) rafRef.current = requestAnimationFrame(step)
         else {
           displayRef.current = target
           setDisplayValue(target)
+          rafRef.current = null
         }
       }
-      requestAnimationFrame(step)
+      rafRef.current = requestAnimationFrame(step)
     }
 
     if (started.current) {
@@ -54,21 +61,39 @@ export function AnimatedCounter({
     const node = elementRef.current
     if (!node) return
 
+    const start = () => {
+      if (started.current) return
+      started.current = true
+      animateTo(value, duration)
+    }
+
+    // Already on-screen (common for header counters) — don't wait forever on IO.
+    const rect = node.getBoundingClientRect()
+    const inView = rect.top < window.innerHeight && rect.bottom > 0
+    if (inView) {
+      start()
+      return () => {
+        if (rafRef.current != null) cancelAnimationFrame(rafRef.current)
+      }
+    }
+
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting && !started.current) {
-            started.current = true
-            animateTo(value, duration)
+          if (entry.isIntersecting) {
+            start()
             observer.disconnect()
           }
         })
       },
-      { threshold: 0.2 }
+      { threshold: 0.15 }
     )
 
     observer.observe(node)
-    return () => observer.disconnect()
+    return () => {
+      observer.disconnect()
+      if (rafRef.current != null) cancelAnimationFrame(rafRef.current)
+    }
   }, [value, duration])
 
   return (

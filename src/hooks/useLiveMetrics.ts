@@ -1,7 +1,8 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
-import { fetchDownloadCounts, fetchSiteStats } from '@/lib/stats'
+import { fetchLiveStats } from '@/lib/stats'
+import { resourceTemplateIds } from '@/lib/templateIds'
 
 export type LiveMetrics = {
   website_visits: number
@@ -15,6 +16,10 @@ type Options = {
   intervalMs?: number
 }
 
+function hasTemplateCounts(downloads: Record<string, number>) {
+  return resourceTemplateIds.some((id) => typeof downloads[id] === 'number')
+}
+
 export function useLiveMetrics(options: Options = {}) {
   const intervalMs = options.intervalMs ?? 5000
   const [metrics, setMetrics] = useState<LiveMetrics | null>(null)
@@ -23,10 +28,14 @@ export function useLiveMetrics(options: Options = {}) {
 
   const refresh = useCallback(async () => {
     try {
-      const [stats, template_downloads] = await Promise.all([
-        fetchSiteStats(),
-        fetchDownloadCounts(),
-      ])
+      const { stats, template_downloads } = await fetchLiveStats()
+
+      // Empty download map with zero visits usually means the client never reached Supabase.
+      // Keep prior metrics (if any) instead of publishing a fake "0 live" snapshot.
+      if (!hasTemplateCounts(template_downloads) && !stats.total_visits) {
+        setError(true)
+        return null
+      }
 
       const next: LiveMetrics = {
         website_visits: Number(stats.total_visits) || 0,

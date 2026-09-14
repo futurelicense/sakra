@@ -34,7 +34,7 @@ import portfolioData from '@/data/portfolio.json'
 
 export default function HomePage() {
   const { home, owner, free_templates, publications, experience } = portfolioData.portfolio
-  const { visits, templateDownloads, templateTotal, refresh } = useLiveMetrics()
+  const { visits, templateDownloads, refresh } = useLiveMetrics()
   const [localTemplateCounters, setLocalTemplateCounters] = useState<Record<string, number> | null>(null)
   const [activeToolCategory, setActiveToolCategory] = useState<string>('All')
   const [previewTemplate, setPreviewTemplate] = useState<TemplatePreviewData | null>(null)
@@ -77,13 +77,19 @@ export default function HomePage() {
 
     setLocalTemplateCounters((prev) => {
       const base = prev ?? {}
-      return { ...base, [id]: (base[id] ?? 0) + 1 }
+      const current =
+        typeof base[id] === 'number'
+          ? base[id]
+          : free_templates.templates.find((t) => t.id === id)?.download_count ?? 0
+      return { ...base, [id]: current + 1 }
     })
 
     if (isResourceTemplateId(id)) {
       registerDownload(id)
         .then((next) => {
-          setLocalTemplateCounters((prev) => ({ ...(prev ?? {}), [id]: next }))
+          if (next > 0) {
+            setLocalTemplateCounters((prev) => ({ ...(prev ?? {}), [id]: next }))
+          }
         })
         .catch(() => refresh())
     }
@@ -93,10 +99,10 @@ export default function HomePage() {
   }
 
   const templateCounters = localTemplateCounters
-  const liveTemplateTotal =
-    templateCounters != null
-      ? free_templates.templates.reduce((acc, tmpl) => acc + (templateCounters[tmpl.id] ?? 0), 0)
-      : templateTotal
+  const liveTemplateTotal = free_templates.templates.reduce((acc, tmpl) => {
+    const live = templateCounters?.[tmpl.id]
+    return acc + (typeof live === 'number' ? live : tmpl.download_count)
+  }, 0)
 
   const metricValue = (metric: (typeof home.metrics)[number]) => {
     if (metric.id === 'website_visits' || metric.dynamic) {
@@ -586,9 +592,10 @@ export default function HomePage() {
                   </button>
                 </div>
                 <span className="text-xs font-mono text-muted">
-                  {templateCounters && typeof templateCounters[tmpl.id] === 'number'
-                    ? `${templateCounters[tmpl.id].toLocaleString()} downloads`
-                    : '— downloads'}
+                  {(
+                    templateCounters?.[tmpl.id] ?? tmpl.download_count
+                  ).toLocaleString()}{' '}
+                  downloads
                 </span>
               </div>
             </TiltCard>
