@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 
 /**
- * Adds template download counts in Supabase (artificial drip).
- * Default: 2 downloads, split at random across the four templates.
+ * Adeola-style drip: template downloads (+ optional visit bump).
+ * Default: 2 downloads across templates, 1 visit.
  *
  *   node scripts/increment-downloads.mjs
- *   COUNT=2 node scripts/increment-downloads.mjs
+ *   COUNT=2 VISIT_COUNT=1 node scripts/increment-downloads.mjs
  *   npm run increment-downloads
  */
 
@@ -13,6 +13,7 @@ import { existsSync, readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
 const COUNT = Math.max(1, Number(process.env.COUNT ?? 2) || 2)
+const VISIT_COUNT = Math.max(0, Number(process.env.VISIT_COUNT ?? 1) || 0)
 const TEMPLATE_IDS = [
   'qa-test-case-template',
   'bug-tracking-template',
@@ -75,7 +76,7 @@ async function rpc(name, body) {
   return fetch(`${supabaseUrl}/rest/v1/rpc/${name}`, {
     method: 'POST',
     headers: rpcHeaders(),
-    body: JSON.stringify(body),
+    body: JSON.stringify(body ?? {}),
   })
 }
 
@@ -91,18 +92,39 @@ if (response.status === 404) {
   }
   if (response.ok) {
     console.log(`Added ${added} download(s) via register_download.`)
-    process.exit(0)
   }
-}
-
-if (!response.ok) {
+} else if (!response.ok) {
   const body = await response.text()
   console.error(`Download increment failed (${response.status}): ${body}`)
   console.error(
-    'If this is a missing table/function, run supabase/migrations/20260913210000_site_stats_and_download_rpcs.sql in the Supabase SQL editor.'
+    'If this is a missing table/function, run supabase/migrations/*.sql in the Supabase SQL editor.'
   )
   process.exit(1)
+} else {
+  const added = await response.json()
+  console.log(`Added ${added} download(s) across templates.`)
 }
 
-const added = await response.json()
-console.log(`Added ${added} download(s) across templates.`)
+if (VISIT_COUNT > 0) {
+  let visitRes = await rpc('bump_visit_counts', { p_count: VISIT_COUNT })
+  if (visitRes.status === 404) {
+    let addedVisits = 0
+    for (let i = 0; i < VISIT_COUNT; i += 1) {
+      visitRes = await rpc('register_visit', { is_new_visitor: false })
+      if (!visitRes.ok) break
+      addedVisits += 1
+    }
+    if (visitRes.ok) {
+      console.log(`Added ${addedVisits} visit(s) via register_visit.`)
+    } else {
+      const body = await visitRes.text()
+      console.warn(`Visit drip skipped (${visitRes.status}): ${body}`)
+    }
+  } else if (!visitRes.ok) {
+    const body = await visitRes.text()
+    console.warn(`Visit drip skipped (${visitRes.status}): ${body}`)
+  } else {
+    const addedVisits = await visitRes.json()
+    console.log(`Added ${addedVisits} visit(s).`)
+  }
+}

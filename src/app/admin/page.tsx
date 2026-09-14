@@ -218,7 +218,11 @@ export default function AdminDashboardPage() {
               <h1 className="font-display text-lg font-bold text-foreground">Analytics dashboard</h1>
             </div>
             <p className="text-xs text-muted font-mono mt-0.5">
-              {data?.storage === 'supabase' ? 'Supabase' : 'In-memory'}
+              {data?.storage === 'supabase'
+                ? 'Supabase'
+                : data?.storage === 'supabase_cached'
+                  ? 'Cached Supabase'
+                  : 'In-memory'}
               {refreshedAt ? ` · Updated ${formatTime(refreshedAt)}` : ''}
             </p>
           </div>

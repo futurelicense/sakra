@@ -3,6 +3,8 @@ import { getMetrics, trackEvent } from '@/lib/metricsStore'
 import { getSupabase, isSupabaseConfigured } from '@/lib/supabase'
 import { isResourceTemplateId } from '@/lib/templateIds'
 
+export const maxDuration = 60
+
 export async function GET() {
   const metrics = await getMetrics()
   return NextResponse.json({

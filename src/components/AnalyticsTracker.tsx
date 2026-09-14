@@ -5,8 +5,9 @@ import { usePathname } from 'next/navigation'
 import { registerVisit } from '@/lib/stats'
 
 /**
- * Registers one site visit per browser tab session (homepage or any public page).
+ * Adeola-style: one site visit per browser tab session.
  * Skips /admin. Does not count on refresh within the same tab.
+ * Dispatches sakera:stats so live counters refresh after the increment.
  */
 export function AnalyticsTracker() {
   const pathname = usePathname()
@@ -14,7 +15,13 @@ export function AnalyticsTracker() {
   useEffect(() => {
     if (!pathname || pathname.startsWith('/admin')) return
 
-    registerVisit().catch(() => {})
+    registerVisit()
+      .then((stats) => {
+        if (stats) {
+          window.dispatchEvent(new CustomEvent('sakera:stats', { detail: stats }))
+        }
+      })
+      .catch(() => {})
   }, [pathname])
 
   return null

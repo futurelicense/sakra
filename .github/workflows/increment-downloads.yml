@@ -1,4 +1,4 @@
-name: Increment template downloads
+name: Increment live counters
 
 on:
   schedule:
@@ -13,9 +13,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
-      - name: Add 2 downloads
+      - name: Add template downloads + visit drip
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
           SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
           COUNT: "2"
+          VISIT_COUNT: "1"
         run: node scripts/increment-downloads.mjs

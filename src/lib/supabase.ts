@@ -1,27 +1,15 @@
 import { createClient, SupabaseClient } from '@supabase/supabase-js'
-import { Agent, setGlobalDispatcher } from 'undici'
 
 let client: SupabaseClient | null = null
-let dispatcherReady = false
-
-/** High-latency / cold links need more than undici's default 10s connect timeout. */
-function ensureDispatcher() {
-  if (dispatcherReady) return
-  setGlobalDispatcher(
-    new Agent({
-      connectTimeout: 30_000,
-      headersTimeout: 30_000,
-      bodyTimeout: 60_000,
-      keepAliveTimeout: 10_000,
-    })
-  )
-  dispatcherReady = true
-}
 
 const FETCH_TIMEOUT_MS = 45_000
 
+/**
+ * Native fetch with an AbortController timeout.
+ * Avoid setGlobalDispatcher/undici Agent overrides — they break in some
+ * Node/Next/Vercel runtimes and cause silent "in-memory" analytics fallbacks.
+ */
 function fetchWithTimeout(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
-  ensureDispatcher()
   const controller = new AbortController()
   const timeout = setTimeout(() => controller.abort(), FETCH_TIMEOUT_MS)
 
@@ -35,8 +23,6 @@ function fetchWithTimeout(input: RequestInfo | URL, init?: RequestInit): Promise
 }
 
 export function getSupabase(): SupabaseClient | null {
-  ensureDispatcher()
-
   const url = process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL
   const key = process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
 
@@ -57,4 +43,15 @@ export function isSupabaseConfigured() {
     (process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL) &&
       (process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
   )
+}
+
+export function supabaseConfigHint() {
+  const hasUrl = Boolean(process.env.SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL)
+  const hasKey = Boolean(process.env.SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY)
+  if (hasUrl && hasKey) return null
+  const missing = [
+    !hasUrl ? 'SUPABASE_URL (or NEXT_PUBLIC_SUPABASE_URL)' : null,
+    !hasKey ? 'SUPABASE_ANON_KEY (or NEXT_PUBLIC_SUPABASE_ANON_KEY)' : null,
+  ].filter(Boolean)
+  return `Missing env: ${missing.join(', ')}. Set them in .env locally and in the Vercel project settings.`
 }

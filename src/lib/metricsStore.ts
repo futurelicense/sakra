@@ -1,5 +1,10 @@
 import { generateDummyIp } from '@/lib/dummyIp'
-import { getSupabase, isSupabaseConfigured } from '@/lib/supabase'
+import { getSupabase, isSupabaseConfigured, supabaseConfigHint } from '@/lib/supabase'
+import {
+  floorTemplateDownloads,
+  floorUnique,
+  floorVisits,
+} from '@/lib/baselines'
 
 export type DownloadEventType = 'resume' | 'template' | 'publication_pdf'
 
@@ -68,12 +73,15 @@ let supabaseDisabledUntil = 0
 let loadInFlight: Promise<MetricsState | null> | null = null
 let loadInFlightKey: string | null = null
 let lastCircuitLogAt = 0
+let lastLoadError: string | null = null
+/** Last successful remote snapshot — prefer over empty memory when Supabase blips. */
+let lastRemote: MetricsState | null = null
 
 function isCircuitOpen() {
   return Date.now() < supabaseDisabledUntil
 }
 
-function openCircuit(ms = 15000) {
+function openCircuit(ms = 20000) {
   supabaseDisabledUntil = Date.now() + ms
   if (Date.now() - lastCircuitLogAt > 30000) {
     lastCircuitLogAt = Date.now()
@@ -83,6 +91,7 @@ function openCircuit(ms = 15000) {
 
 function closeCircuit() {
   supabaseDisabledUntil = 0
+  lastLoadError = null
 }
 
 /** Allow admin refresh to retry Supabase immediately. */
@@ -185,7 +194,7 @@ function trackEventMemory(
   return memory
 }
 
-function snapshotFromState(state: MetricsState, storage: 'supabase' | 'in_memory', note: string) {
+function snapshotFromState(state: MetricsState, storage: 'supabase' | 'in_memory' | 'supabase_cached', note: string) {
   const templateTotal = Object.values(state.template_downloads).reduce((a, b) => a + b, 0)
   const publicationPdfTotal = Object.values(state.publication_downloads).reduce((a, b) => a + b, 0)
   const paperReads = Object.values(state.publication_views).reduce((a, b) => a + b, 0)
@@ -275,12 +284,12 @@ function mapStateFromParts(input: {
 
   const siteStats = input.site_stats
   return {
-    website_visits: Number(siteStats?.total_visits ?? metricMap.website_visits) || 0,
+    website_visits: floorVisits(Number(siteStats?.total_visits ?? metricMap.website_visits) || 0),
     monthly_visits: Number(siteStats?.monthly_visits) || 0,
-    unique_visitors: Number(siteStats?.unique_visitors ?? metricMap.unique_visitors) || 0,
+    unique_visitors: floorUnique(Number(siteStats?.unique_visitors ?? metricMap.unique_visitors) || 0),
     page_views,
     resume_downloads: metricMap.resume_downloads || 0,
-    template_downloads,
+    template_downloads: floorTemplateDownloads(template_downloads),
     publication_views,
     publication_downloads,
     linkedin_clicks: metricMap.linkedin_clicks || 0,
@@ -295,7 +304,10 @@ async function loadViaRpc(includeEvents: boolean): Promise<MetricsState | null> 
   if (!supabase) return null
 
   const { data, error } = await supabase.rpc('get_portfolio_analytics')
-  if (error || !data) return null
+  if (error || !data) {
+    lastLoadError = error?.message || 'get_portfolio_analytics returned empty'
+    return null
+  }
 
   const payload = data as {
     site_stats?: {
@@ -325,46 +337,48 @@ async function loadViaSequentialQueries(includeEvents: boolean): Promise<Metrics
   const supabase = getSupabase()
   if (!supabase) return null
 
-  // Sequential on purpose: parallel requests stack latency and trip the timeout.
-  const statsRes = await supabase
-    .from('site_stats')
-    .select('total_visits, monthly_visits, unique_visitors')
-    .eq('id', 'global')
-    .maybeSingle()
+  // Core tables in parallel — don't hard-fail on optional legacy tables.
+  const [statsRes, metricsRes, templatesRes, pubsRes] = await Promise.all([
+    supabase
+      .from('site_stats')
+      .select('total_visits, monthly_visits, unique_visitors')
+      .eq('id', 'global')
+      .maybeSingle(),
+    supabase.from('site_metrics').select('metric_name, metric_value'),
+    supabase.from('templates').select('id, download_count'),
+    supabase.from('publications').select('id, view_count, download_count'),
+  ])
 
-  const metricsRes = await supabase.from('site_metrics').select('metric_name, metric_value')
-  if (metricsRes.error) throw metricsRes.error
-
-  const templatesRes = await supabase.from('templates').select('id, download_count')
-  if (templatesRes.error) throw templatesRes.error
-
-  const pubsRes = await supabase.from('publications').select('id, view_count, download_count')
-  if (pubsRes.error) throw pubsRes.error
+  if (templatesRes.error) {
+    lastLoadError = templatesRes.error.message
+    throw templatesRes.error
+  }
 
   let downloadRows: any[] | undefined
   let visitRows: any[] | undefined
 
   if (includeEvents) {
-    const downloadsRes = await supabase
-      .from('download_events')
-      .select('id, event_type, asset_id, asset_label, ip_address, path, created_at')
-      .order('created_at', { ascending: false })
-      .limit(200)
+    const [downloadsRes, visitsRes] = await Promise.all([
+      supabase
+        .from('download_events')
+        .select('id, event_type, asset_id, asset_label, ip_address, path, created_at')
+        .order('created_at', { ascending: false })
+        .limit(200),
+      supabase
+        .from('site_visits')
+        .select('id, page, ip_address, visited_at')
+        .order('visited_at', { ascending: false })
+        .limit(100),
+    ])
     if (!downloadsRes.error) downloadRows = downloadsRes.data || []
-
-    const visitsRes = await supabase
-      .from('site_visits')
-      .select('id, page, ip_address, visited_at')
-      .order('visited_at', { ascending: false })
-      .limit(100)
     if (!visitsRes.error) visitRows = visitsRes.data || []
   }
 
   return mapStateFromParts({
     site_stats: statsRes.error ? null : statsRes.data,
-    metrics: metricsRes.data || [],
+    metrics: metricsRes.error ? [] : metricsRes.data || [],
     templates: templatesRes.data || [],
-    publications: pubsRes.data || [],
+    publications: pubsRes.error ? [] : pubsRes.data || [],
     download_events: downloadRows,
     site_visits: visitRows,
     keepEventsFromMemory: !includeEvents || downloadRows === undefined,
@@ -376,7 +390,10 @@ async function loadFromSupabase(options: { includeEvents?: boolean } = {}): Prom
   if (isCircuitOpen()) return null
 
   const supabase = getSupabase()
-  if (!supabase) return null
+  if (!supabase) {
+    lastLoadError = supabaseConfigHint() || 'Supabase client unavailable'
+    return null
+  }
 
   if (loadInFlight && loadInFlightKey === (includeEvents ? 'full' : 'core')) {
     return loadInFlight
@@ -385,22 +402,26 @@ async function loadFromSupabase(options: { includeEvents?: boolean } = {}): Prom
   loadInFlightKey = includeEvents ? 'full' : 'core'
   loadInFlight = (async () => {
     try {
-      const viaRpc = await loadViaRpc(includeEvents)
-      if (viaRpc) {
-        closeCircuit()
-        return viaRpc
-      }
-
+      // Prefer direct table queries (faster / more reliable than the heavy analytics RPC).
       const viaQueries = await loadViaSequentialQueries(includeEvents)
       if (viaQueries) {
         closeCircuit()
+        lastRemote = viaQueries
         return viaQueries
+      }
+
+      const viaRpc = await loadViaRpc(includeEvents)
+      if (viaRpc) {
+        closeCircuit()
+        lastRemote = viaRpc
+        return viaRpc
       }
 
       openCircuit()
       return null
     } catch (err) {
-      console.warn('[analytics] Supabase load failed', err instanceof Error ? err.message : err)
+      lastLoadError = err instanceof Error ? err.message : String(err)
+      console.warn('[analytics] Supabase load failed', lastLoadError)
       openCircuit()
       return null
     }
@@ -419,12 +440,22 @@ export async function getMetrics(): Promise<ReturnType<typeof toPublicMetrics>> 
       memory = { ...remote, download_events: memory.download_events, visit_events: memory.visit_events }
       return toPublicMetrics(remote)
     }
+    if (lastRemote) {
+      return toPublicMetrics(lastRemote)
+    }
   }
   return toPublicMetrics(memory)
 }
 
 export async function getAdminSnapshot() {
   resetSupabaseCircuit()
+
+  const envHint = supabaseConfigHint()
+  if (envHint) {
+    return {
+      ...snapshotFromState(lastRemote || memory, 'in_memory', envHint),
+    }
+  }
 
   if (isSupabaseConfigured()) {
     const remote = await loadFromSupabase({ includeEvents: true })
@@ -438,11 +469,14 @@ export async function getAdminSnapshot() {
     }
   }
 
-  const note = isCircuitOpen()
-    ? 'Supabase timed out recently - showing cached/in-memory metrics until the connection recovers.'
-    : 'Using in-memory fallback. Confirm network access to Supabase, then refresh.'
+  const fallback = lastRemote || memory
+  const note = lastLoadError
+    ? `Supabase error: ${lastLoadError}. Showing ${lastRemote ? 'last successful' : 'in-memory'} metrics.`
+    : isCircuitOpen()
+      ? 'Supabase timed out recently - showing cached/in-memory metrics until the connection recovers.'
+      : 'Using in-memory fallback. Confirm network access to Supabase, then refresh.'
 
-  return snapshotFromState(memory, 'in_memory', note)
+  return snapshotFromState(fallback, lastRemote ? 'supabase_cached' : 'in_memory', note)
 }
 
 export async function trackEvent(

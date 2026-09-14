@@ -254,8 +254,18 @@ LANGUAGE plpgsql SECURITY DEFINER SET search_path = public
 AS $$
 DECLARE
   current_month TEXT := to_char(now(), 'YYYY-MM');
+  baseline_visits CONSTANT BIGINT := 1462;
+  baseline_unique CONSTANT BIGINT := 980;
 BEGIN
-  INSERT INTO site_stats (id) VALUES ('global') ON CONFLICT (id) DO NOTHING;
+  INSERT INTO site_stats (id, total_visits, monthly_visits, unique_visitors, month_key)
+  VALUES ('global', baseline_visits, 0, baseline_unique, current_month)
+  ON CONFLICT (id) DO NOTHING;
+
+  UPDATE site_stats s
+     SET total_visits = GREATEST(s.total_visits, baseline_visits),
+         unique_visitors = GREATEST(s.unique_visitors, baseline_unique)
+   WHERE s.id = 'global';
+
   UPDATE site_stats s
      SET total_visits = s.total_visits + 1,
          monthly_visits = CASE WHEN s.month_key = current_month THEN s.monthly_visits + 1 ELSE 1 END,

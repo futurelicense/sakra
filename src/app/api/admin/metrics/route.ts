@@ -6,6 +6,9 @@ import {
   isValidAdminToken,
 } from '@/lib/adminAuth'
 
+/** Supabase round-trips from cold regions can exceed the default 10s hobby limit. */
+export const maxDuration = 60
+
 export async function GET(request: Request) {
   const token = request.headers.get('x-admin-token')
   if (!isValidAdminToken(token)) {
