@@ -29,7 +29,6 @@ export default function ExperiencePage() {
   const featuredWork = experience.featured_work ?? []
 
   const metricById = Object.fromEntries(home.metrics.map((m) => [m.id, m.value]))
-  const years = metricById.professional_experience ?? 0
   const testCases =
     experience.roles.find((r) => r.id === 'upskill-consultancy')?.metrics.find((m) => m.label === 'Test Cases')
       ?.value ?? metricById.test_cases ?? 0
@@ -73,15 +72,7 @@ export default function ExperiencePage() {
         </p>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 p-4 sm:p-5 rounded-2xl panel">
-        <div className="space-y-0.5">
-          <div className="font-display text-2xl sm:text-3xl font-bold text-primary tabular-nums">
-            <AnimatedCounter value={years} suffix="+" />
-          </div>
-          <div className="text-[10px] sm:text-xs font-mono text-muted uppercase tracking-wider">
-            Years
-          </div>
-        </div>
+      <div className="grid grid-cols-3 gap-3 p-4 sm:p-5 rounded-2xl panel">
         <div className="space-y-0.5">
           <div className="font-display text-2xl sm:text-3xl font-bold text-signal tabular-nums">
             <AnimatedCounter value={testCases} suffix="+" />

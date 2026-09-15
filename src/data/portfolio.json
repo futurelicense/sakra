@@ -49,12 +49,6 @@
       },
       "metrics": [
         {
-          "id": "professional_experience",
-          "label": "Years of Professional Experience",
-          "value": 5,
-          "suffix": "+"
-        },
-        {
           "id": "test_cases",
           "label": "Test Cases Executed",
           "value": 150,
@@ -63,7 +57,7 @@
         {
           "id": "data_records",
           "label": "Records Analyzed",
-          "value": 30000,
+          "value": 5000,
           "suffix": "+"
         },
         {
@@ -246,7 +240,7 @@
           "metrics": [
             {
               "label": "Records Analyzed",
-              "value": 30000,
+              "value": 5000,
               "suffix": "+"
             },
             {
@@ -266,7 +260,7 @@
             }
           ],
           "responsibilities": [
-            "Cleaned, validated, and analyzed 30,000+ records across 20+ datasets.",
+            "Cleaned, validated, and analyzed 5,000+ records across 20+ datasets.",
             "Used SQL, Python, Excel, and data-validation techniques to prepare information for analysis and reporting.",
             "Produced 25+ analytical reports, summaries, and data-driven recommendations.",
             "Conducted exploratory and trend analysis across local, national, and global datasets.",

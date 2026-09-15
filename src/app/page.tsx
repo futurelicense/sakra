@@ -136,7 +136,7 @@ export default function HomePage() {
       subtitle: 'TaskInspota Inc. · Data Analyst',
       icon: <Database className="h-5 w-5" />,
       description:
-        'I validated, cleansed, and analyzed 30,000+ records across 20+ datasets. Using SQL, Python, and Excel, I learned how messy raw data creates silent system failures, and how rigorous validation protects critical business decisions.'
+        'I validated, cleansed, and analyzed 5,000+ records across 20+ datasets. Using SQL, Python, and Excel, I learned how messy raw data creates silent system failures, and how rigorous validation protects critical business decisions.'
     },
     {
       step: '4',
@@ -275,7 +275,7 @@ export default function HomePage() {
           </a>
         </div>
 
-        <div className="mt-12 grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
+        <div className="mt-12 grid grid-cols-1 gap-3 sm:grid-cols-3 lg:gap-4">
           {home.metrics.map((metric, idx) => {
             const displayVal = metricValue(metric)
             const isLive = metric.id === 'website_visits' || Boolean(metric.dynamic)
@@ -488,7 +488,7 @@ export default function HomePage() {
             </div>
 
             <h3 className="mt-4 font-display text-xl font-bold text-foreground leading-snug">
-              30,000+ Record Cleansing & SQL Anomaly Validation
+              5,000+ Record Cleansing & SQL Anomaly Validation
             </h3>
             <p className="mt-3 text-sm sm:text-base leading-relaxed text-muted">
               Built automated SQL checks and Python cleaning pipelines across 20+ heterogeneous datasets, assessing missing values, referential integrity, and delivering 25+ business intelligence reports.
