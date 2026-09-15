@@ -132,7 +132,7 @@ createPdfFile(
   path.join(pubDir, 'Sakera_Begum_QA_Benchmarking_2026.pdf'),
   'Benchmarking Test Automation Frameworks for Web & Mobile',
   'Sakera Begum',
-  'Doctor of Computer Science Working Paper Series, WUST'
+  'Doctor of Computer Science Working Paper Series, University of the Potomac'
 )
 
 console.log('All templates and publication PDFs created successfully!')

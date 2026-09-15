@@ -149,7 +149,7 @@ export default function HomePage() {
     {
       step: '5',
       title: 'Doctoral Research & Intelligent Software Reliability',
-      subtitle: 'Doctor of Computer Science (DCS) · WUST',
+      subtitle: 'Doctor of Computer Science (DCS) · University of the Potomac · Started 31 August 2026',
       icon: <Cpu className="h-5 w-5" />,
       description:
         'Today, I conduct doctoral research combining machine learning with agile CI/CD pipelines to forecast regression defects before deployment, publishing peer-reviewed research in software engineering.'
@@ -657,7 +657,7 @@ export default function HomePage() {
 
             <div className="mt-8 pt-6 border-t border-border/80 flex flex-wrap items-center justify-between gap-3 text-xs font-mono text-muted">
               <div className="flex items-center gap-2">
-                <span>Fairfax, VA / Remote</span>
+                <span>{owner.location}</span>
               </div>
               <button
                 onClick={handleCopyEmail}

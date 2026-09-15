@@ -153,10 +153,10 @@ export default function ResumePage() {
             <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl bg-slate-50 border border-border/40">
               <div>
                 <strong className="text-foreground text-base font-display">Doctor of Computer Science (DCS)</strong>
-                <div className="text-muted text-xs font-mono">Washington University of Science and Technology (WUST)</div>
+                <div className="text-muted text-xs font-mono">University of the Potomac</div>
               </div>
               <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded bg-primary/10 text-primary border border-primary/20 mt-2 sm:mt-0 w-fit">
-                In Progress (Expected 2026/2027)
+                In Progress · Started 31 August 2026
               </span>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl bg-slate-50 border border-border/40">

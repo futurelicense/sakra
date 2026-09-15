@@ -86,7 +86,7 @@ export default function PublicationsPage() {
           </span>
           <div className="space-y-1.5">
             <span className="text-xs font-mono uppercase tracking-wider text-primary">
-              Doctoral Research Focus · Doctor of Computer Science (DCS)
+              Doctoral Research Focus · DCS · University of the Potomac
             </span>
             <h3 className="font-display text-lg font-bold text-foreground">
               Predictive Defect Modeling & Intelligent Regression Scheduling in CI/CD

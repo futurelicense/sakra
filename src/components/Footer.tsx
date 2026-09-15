@@ -106,7 +106,7 @@ export function Footer() {
             <ShieldCheck className="w-3.5 h-3.5 text-primary" />
             <span>Verified credentials</span>
             <span className="text-border">·</span>
-            <span className="font-mono text-[11px]">Fairfax, VA</span>
+            <span className="font-mono text-[11px]">{owner.location}</span>
           </div>
         </div>
       </div>
