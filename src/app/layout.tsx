@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import { SiteShell } from '@/components/SiteShell'
-import portfolioData from '@/data/portfolio.json'
+import portfolioData from '@/data/portfolio'
 
 export const metadata: Metadata = {
   title: `${portfolioData.portfolio.owner.name} | ${portfolioData.portfolio.owner.professional_title}`,

@@ -1,10 +1,10 @@
 'use client'
 
 import Link from 'next/link'
-import { Eye, ShieldCheck, Mail, GraduationCap } from 'lucide-react'
+import { Eye, Mail, GraduationCap } from 'lucide-react'
 import { LinkedinIcon, GithubIcon } from '@/components/Icons'
 import { useLiveMetrics } from '@/hooks/useLiveMetrics'
-import portfolioData from '@/data/portfolio.json'
+import portfolioData from '@/data/portfolio'
 
 export function Footer() {
   const { footer, owner } = portfolioData.portfolio
@@ -116,9 +116,6 @@ export function Footer() {
         <div className="flex flex-col sm:flex-row items-center justify-between text-xs text-muted-dark gap-3">
           <div>{footer.copyright}</div>
           <div className="flex items-center gap-2 text-muted">
-            <ShieldCheck className="w-3.5 h-3.5 text-primary" />
-            <span>Verified credentials</span>
-            <span className="text-border">·</span>
             <span className="font-mono text-[11px]">{owner.location}</span>
           </div>
         </div>

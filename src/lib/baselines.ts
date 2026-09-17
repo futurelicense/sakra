@@ -1,4 +1,4 @@
-import portfolioData from '@/data/portfolio.json'
+import portfolioData from '@/data/portfolio'
 
 const { home, free_templates, publications } = portfolioData.portfolio
 

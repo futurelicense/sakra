@@ -2,9 +2,8 @@ const fs = require('fs')
 const path = require('path')
 
 const downloadsDir = path.join(__dirname, '..', 'public', 'downloads')
-const pubDir = path.join(downloadsDir, 'publications')
 
-fs.mkdirSync(pubDir, { recursive: true })
+fs.mkdirSync(downloadsDir, { recursive: true })
 
 // Helper to create a structured CSV that Excel opens cleanly as a spreadsheet
 function createSpreadsheetCSV(filename, headers, rows) {
@@ -63,76 +62,7 @@ createSpreadsheetCSV(
   ]
 )
 
-// Dummy PDF generator with proper text PDF stream
-function createPdfFile(filePath, title, author, text) {
-  const streamData = `BT /F1 18 Tf 50 750 Td (${title}) Tj ET\nBT /F1 12 Tf 50 720 Td (Author: ${author}) Tj ET\nBT /F1 10 Tf 50 680 Td (${text}) Tj ET`
-  const streamLength = streamData.length
-  
-  const pdfContent = `%PDF-1.4
-1 0 obj
-<< /Type /Catalog /Pages 2 0 R >>
-endobj
-2 0 obj
-<< /Type /Pages /Kids [3 0 R] /Count 1 >>
-endobj
-3 0 obj
-<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>
-endobj
-4 0 obj
-<< /Length ${streamLength} >>
-stream
-${streamData}
-endstream
-endobj
-5 0 obj
-<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
-endobj
-xref
-0 6
-0000000000 65535 f 
-0000000009 00000 n 
-0000000058 00000 n 
-0000000115 00000 n 
-0000000224 00000 n 
-0000000300 00000 n 
-trailer
-<< /Size 6 /Root 1 0 R >>
-startxref
-377
-%%EOF`
-
-  fs.writeFileSync(filePath, pdfContent)
-  console.log(`Created PDF: ${filePath}`)
-}
-
-// Create resume PDF
-createPdfFile(
-  path.join(downloadsDir, 'Sakera_Begum_Resume.pdf'),
-  'Sakera Begum - Curriculum Vitae',
-  'Sakera Begum',
-  'IT Consultant | Data Analyst | Software Quality Assurance'
-)
-
-// Create publication PDFs
-createPdfFile(
-  path.join(pubDir, 'Sakera_Begum_Defect_Prediction_2025.pdf'),
-  'Machine Learning & Automated Defect Prediction in Agile QA',
-  'Sakera Begum et al.',
-  'International Journal of Software Engineering & Quality Assurance'
-)
-
-createPdfFile(
-  path.join(pubDir, 'Sakera_Begum_Data_Cleansing_2024.pdf'),
-  'Data Cleansing & Integrity Validation Frameworks',
-  'Sakera Begum',
-  'Proceedings of the IEEE International Conference on Big Data'
-)
-
-createPdfFile(
-  path.join(pubDir, 'Sakera_Begum_QA_Benchmarking_2026.pdf'),
-  'Benchmarking Test Automation Frameworks for Web & Mobile',
-  'Sakera Begum',
-  'Doctor of Computer Science Working Paper Series, University of the Potomac'
-)
-
-console.log('All templates and publication PDFs created successfully!')
+// Intentionally do NOT generate placeholder resume or publication PDFs.
+// Only ship real publisher-approved article PDFs and the official USCIS/RFE CV when provided.
+console.log('Spreadsheet templates created. Skipping placeholder resume/publication PDFs.')
+console.log('All templates created successfully!')

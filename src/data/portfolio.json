@@ -4,12 +4,12 @@
       "name": "Sakera Begum",
       "professional_title": "IT Consultant | Data Analyst | Software Quality Assurance",
       "tagline": "Building reliable technology solutions through software testing, data analytics, quality assurance, and technical problem-solving.",
-      "location": "Mayhunt Ct, Alexandria, Virginia 22312",
+      "location": "Alexandria, VA, USA",
       "email": "admin@wesustaingrowth.com",
       "linkedin_url": "https://www.linkedin.com/in/sakerabegum",
-      "github_url": "https://github.com/sakera-begum",
+      "github_url": "https://github.com/sakera023",
       "google_scholar_url": "https://scholar.google.com/citations?user=D4t4wxAAAAAJ&hl=en",
-      "resume_url": "/downloads/Sakera_Begum_Resume.pdf"
+      "resume_url": ""
     },
     "navigation": [
       {
@@ -117,11 +117,10 @@
         },
         {
           "title": "Research & Knowledge Sharing",
-          "description": "Applied research, professional publications, reusable resources, and practical technology templates.",
+          "description": "Doctoral and applied research, technical writing, reusable resources, and practical technology templates.",
           "skills": [
             "Research",
             "Technical Writing",
-            "Professional Publications",
             "Knowledge Resources",
             "Template Development"
           ]
@@ -138,7 +137,7 @@
         },
         "publications": {
           "title": "Research & Publications",
-          "description": "Applied research exploring technology, data, information systems, software quality, and intelligent solutions.",
+          "description": "Peer-reviewed research on predictive analytics, AI-enabled capital readiness, and intelligent systems for startups and SMEs.",
           "cta": {
             "label": "Explore Publications",
             "target": "/publications"
@@ -161,9 +160,9 @@
         {
           "id": "we-sustain-growth",
           "organization": "We Sustain Growth",
-          "title": "Startup Capital Assessment (NSCR)",
+          "title": "National Startup Capital Readiness Scoring (NSCRS) Platform",
           "website": "https://wesustaingrowth.com/",
-          "summary": "Product validation and quality assurance support for NSCR - an AI-powered platform that evaluates startup funding readiness across investor criteria, producing a Capital Readiness Score, AI analysis, and actionable recommendations for founders.",
+          "summary": "Product validation and quality assurance support for the National Startup Capital Readiness Scoring (NSCRS) Platform — an AI-powered system that evaluates startup funding readiness using approximately 25 indicators across six areas, producing a Capital Readiness Score, AI analysis, and actionable recommendations for founders.",
           "tags": [
             "Capital Readiness",
             "AI Assessment",
@@ -172,7 +171,7 @@
           ],
           "highlights": [
             "Validated end-to-end assessment flows from founder intake through score generation and recommendation delivery.",
-            "Tested scoring consistency across five investor-aligned readiness dimensions, including edge cases and output clarity.",
+            "Tested scoring consistency across approximately 25 indicators grouped into six readiness areas, including edge cases and output clarity.",
             "Reviewed capital readiness scorecards, AI narrative evaluation, and founder-facing recommendation modules before release.",
             "Logged and retested product defects related to scoring logic, result presentation, and assessment workflows."
           ]
@@ -226,7 +225,7 @@
         },
         {
           "id": "data-analyst",
-          "company": "TaskInspota Inc.",
+          "company": "Task Impetus Inc.",
           "role": "Data Analyst",
           "location": "Remote",
           "start_date": "2023-02",
@@ -363,61 +362,106 @@
     },
     "publications": {
       "page_title": "Research & Publications",
-      "page_subtitle": "Exploring technology, data, quality, and intelligent systems through applied research.",
+      "page_subtitle": "Peer-reviewed and journal publications on predictive analytics, AI-enabled capital readiness, and intelligent systems for startups and small enterprises.",
       "categories": [
         "All Categories",
-        "Published Research",
-        "Conference Papers",
-        "Working Papers",
-        "Preprints"
+        "Published Research"
       ],
       "items": [
         {
-          "id": "pub-1",
-          "title": "Machine Learning and Automated Defect Prediction in Agile QA Pipelines",
-          "authors": ["Sakera Begum", "Research Collaborators"],
-          "publication_type": "Published Research",
-          "journal_or_conference": "International Journal of Software Engineering & Quality Assurance (IJSEQA)",
-          "year": "2025",
-          "abstract": "This paper investigates predictive machine learning models integrated within CI/CD pipelines to forecast regression defects before deployment. Using historical commit histories and code complexity metrics, the framework demonstrates an 18% improvement in early defect detection compared to conventional test scheduling algorithms.",
-          "tags": ["Software QA", "Machine Learning", "Defect Prediction", "CI/CD", "Quality Metrics"],
-          "doi": "10.1016/j.ijseqa.2025.10482",
-          "external_url": "https://doi.org/10.1016/j.ijseqa.2025.10482",
-          "pdf_url": "/downloads/publications/Sakera_Begum_Defect_Prediction_2025.pdf",
-          "views": 328,
-          "downloads": 94,
-          "featured": true
-        },
-        {
-          "id": "pub-2",
-          "title": "Data Cleansing and Integrity Validation Frameworks for Heterogeneous Enterprise Datasets",
+          "id": "pub-renewable-capital-2026",
+          "title": "AI-Based Predictive Capital Optimization Framework for U.S. Renewable Energy Startups: Evaluating Economic Value, Investment Efficiency, and Return on Investment",
           "authors": ["Sakera Begum"],
-          "publication_type": "Conference Papers",
-          "journal_or_conference": "Proceedings of the IEEE International Conference on Big Data and Information Systems",
-          "year": "2024",
-          "abstract": "Enterprise analytics are heavily vulnerable to noise and inconsistent schemas in merged operational data. This paper proposes a robust heuristic framework combining rule-based schema validation with statistical anomaly detection, reducing data preparation overhead by 40% across tabular relational stores.",
-          "tags": ["Data Quality", "Data Analytics", "Data Cleansing", "Enterprise Systems"],
-          "doi": "10.1109/ICBDIS.2024.98124",
-          "external_url": "https://doi.org/10.1109/ICBDIS.2024.98124",
-          "pdf_url": "/downloads/publications/Sakera_Begum_Data_Cleansing_2024.pdf",
-          "views": 215,
-          "downloads": 67,
+          "publication_type": "Published Research",
+          "journal_or_conference": "Power System Protection and Control, 54(3)",
+          "year": "2026",
+          "abstract": "Presents an AI-based predictive capital optimization framework for U.S. renewable energy startups, evaluating economic value, investment efficiency, and return on investment.",
+          "tags": ["Predictive Analytics", "Capital Optimization", "Renewable Energy", "Startups"],
+          "doi": "10.46121/pspc.54.3.52",
+          "external_url": "https://doi.org/10.46121/pspc.54.3.52",
+          "pdf_url": "",
+          "views": 0,
+          "downloads": 0,
           "featured": true
         },
         {
-          "id": "pub-3",
-          "title": "Benchmarking Test Automation Frameworks for Web and Mobile Cloud Environments",
-          "authors": ["Sakera Begum", "Doctoral Seminar Committee"],
-          "publication_type": "Working Papers",
-          "journal_or_conference": "Doctor of Computer Science Working Paper Series, University of the Potomac",
+          "id": "pub-cybersecurity-readiness-2026",
+          "title": "AI-Powered Cybersecurity Readiness and Innovation Performance in Startup Ecosystems: A Framework for Sustainable Entrepreneurial Growth and Business Operations",
+          "authors": ["Sakera Begum", "Zeeshan Akbar", "Sikander Niaz", "Salman Akbar"],
+          "publication_type": "Published Research",
+          "journal_or_conference": "Journal of Global Entrepreneurial Management, 4(5)",
           "year": "2026",
-          "abstract": "A comprehensive comparative study assessing performance, maintenance overhead, and reliability across modern test automation suites (Selenium, Playwright, Cypress) executing against distributed cloud test farms under varying network conditions.",
-          "tags": ["Automated Testing", "Cloud Testing", "Benchmarking", "QA Frameworks"],
+          "abstract": "Proposes a framework linking AI-powered cybersecurity readiness with innovation performance to support sustainable entrepreneurial growth and business operations in startup ecosystems.",
+          "tags": ["Cybersecurity", "Startup Ecosystems", "Innovation", "AI"],
           "doi": "",
-          "external_url": "",
-          "pdf_url": "/downloads/publications/Sakera_Begum_QA_Benchmarking_2026.pdf",
-          "views": 180,
-          "downloads": 49,
+          "external_url": "https://scitechjournals.com/journal-of-global-entrepreneurial-management/article-in-press",
+          "pdf_url": "",
+          "views": 0,
+          "downloads": 0,
+          "featured": true
+        },
+        {
+          "id": "pub-economic-resilience-2025",
+          "title": "Artificial Intelligence and Economic Resilience: A Review of Predictive Financial Modelling for Post-Pandemic Recovery in the United States SME Sector",
+          "authors": ["Sakera Begum"],
+          "publication_type": "Published Research",
+          "journal_or_conference": "International Journal of Innovative Science and Research Technology, 10(7)",
+          "year": "2025",
+          "abstract": "Reviews how AI-driven predictive financial modelling can support economic resilience and post-pandemic recovery among U.S. small and medium-sized enterprises.",
+          "tags": ["Predictive Modelling", "SMEs", "Economic Resilience", "AI"],
+          "doi": "10.38124/ijisrt/25jul1726",
+          "external_url": "https://doi.org/10.38124/ijisrt/25jul1726",
+          "pdf_url": "",
+          "views": 0,
+          "downloads": 0,
+          "featured": true
+        },
+        {
+          "id": "pub-capital-deployment-2025",
+          "title": "Optimizing Capital Deployment in Post-Pandemic America: AI-Powered Predictive Analytics for Startup Resilience and Growth",
+          "authors": ["Sakera Begum"],
+          "publication_type": "Published Research",
+          "journal_or_conference": "International Journal of Computer Applications Technology and Research",
+          "year": "2025",
+          "abstract": "Examines AI-powered predictive analytics for capital deployment, helping startups forecast capital needs, identify opportunities, and strengthen resilience in the post-pandemic U.S. economy.",
+          "tags": ["Capital Deployment", "Predictive Analytics", "Startup Resilience", "AI"],
+          "doi": "10.7753/ijcatr1112.1030",
+          "external_url": "https://doi.org/10.7753/ijcatr1112.1030",
+          "pdf_url": "",
+          "views": 0,
+          "downloads": 0,
+          "featured": false
+        },
+        {
+          "id": "pub-liquidity-cashflow-2026",
+          "title": "Predictive Financial Technologies for Strengthening Liquidity and Cash-Flow Management in U.S. Small Enterprises",
+          "authors": ["Sakera Begum"],
+          "publication_type": "Published Research",
+          "journal_or_conference": "Frontiers in Computer Science and Artificial Intelligence, 5(4)",
+          "year": "2026",
+          "abstract": "Analyzes predictive financial technologies that help U.S. small enterprises improve liquidity visibility, cash-flow planning, and operational sustainability.",
+          "tags": ["FinTech", "Liquidity", "Cash Flow", "Small Business"],
+          "doi": "10.32996/jcsts.2026.5.4.1",
+          "external_url": "https://doi.org/10.32996/jcsts.2026.5.4.1",
+          "pdf_url": "",
+          "views": 0,
+          "downloads": 0,
+          "featured": false
+        },
+        {
+          "id": "pub-ai-at-scale-2024",
+          "title": "AI at Scale: Predictive Analytics as a Strategic Engine for National Competitiveness in U.S. Startup and Small Business Financing",
+          "authors": ["Sakera Begum"],
+          "publication_type": "Published Research",
+          "journal_or_conference": "International Journal of Research Publication and Reviews, 5(12)",
+          "year": "2024",
+          "abstract": "Explores how large-scale predictive analytics can improve transparency, capital allocation, and competitiveness in U.S. startup and small business financing.",
+          "tags": ["Predictive Analytics", "National Competitiveness", "Startup Financing", "AI"],
+          "doi": "",
+          "external_url": "https://ijrpr.com/uploads/V5ISSUE12/IJRPR36942.pdf",
+          "pdf_url": "",
+          "views": 0,
+          "downloads": 0,
           "featured": false
         }
       ],
@@ -757,7 +801,7 @@
       ],
       "social_links": {
         "linkedin": "https://www.linkedin.com/in/sakerabegum",
-        "github": "https://github.com/sakera-begum",
+        "github": "https://github.com/sakera023",
         "google_scholar": "https://scholar.google.com/citations?user=D4t4wxAAAAAJ&hl=en",
         "email": "mailto:admin@wesustaingrowth.com"
       },

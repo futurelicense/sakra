@@ -15,7 +15,7 @@ import {
 } from 'lucide-react'
 import { TiltCard } from '@/components/TiltCard'
 import { AnimatedCounter } from '@/components/AnimatedCounter'
-import portfolioData from '@/data/portfolio.json'
+import portfolioData from '@/data/portfolio'
 
 export default function ExperiencePage() {
   const { experience, home } = portfolioData.portfolio
@@ -298,7 +298,7 @@ export default function ExperiencePage() {
               Need the full CV?
             </h3>
             <p className="text-sm text-muted">
-              Download the curriculum vitae with education, credentials, and publications.
+              View the online curriculum vitae with education, credentials, and experience.
             </p>
           </div>
           <Link
@@ -306,7 +306,7 @@ export default function ExperiencePage() {
             className="inline-flex items-center gap-2 rounded-lg btn-signal h-10 px-5 text-xs font-semibold uppercase tracking-wider shrink-0"
           >
             <Download className="h-4 w-4" />
-            Download Resume
+            View Resume
           </Link>
         </TiltCard>
       </div>

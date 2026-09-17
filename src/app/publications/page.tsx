@@ -13,7 +13,7 @@ import {
 } from 'lucide-react'
 import { TiltCard } from '@/components/TiltCard'
 import { CitationModal, PublicationCitationData } from '@/components/CitationModal'
-import portfolioData from '@/data/portfolio.json'
+import portfolioData from '@/data/portfolio'
 
 export default function PublicationsPage() {
   const { publications } = portfolioData.portfolio
@@ -89,10 +89,10 @@ export default function PublicationsPage() {
               Doctoral Research Focus · DCS · University of the Potomac
             </span>
             <h3 className="font-display text-lg font-bold text-foreground">
-              Predictive Defect Modeling & Intelligent Regression Scheduling in CI/CD
+              Predictive Analytics, Capital Readiness & Intelligent Systems
             </h3>
             <p className="text-sm text-muted leading-relaxed">
-              Investigating the integration of lightweight machine learning classifiers directly into continuous integration workflows, reducing test run overhead while surfacing defects earlier in the software development lifecycle.
+              Research portfolio spanning AI-powered capital optimization, cybersecurity readiness in startup ecosystems, predictive financial modelling for SMEs, and national competitiveness in U.S. small-business financing.
             </p>
           </div>
         </div>
@@ -132,7 +132,9 @@ export default function PublicationsPage() {
           <div className="text-center py-16 rounded-2xl panel">
             <BookOpen className="w-10 h-10 text-muted mx-auto mb-3" />
             <h3 className="text-base font-semibold text-foreground">No publications found</h3>
-            <p className="text-sm text-muted mt-1">Try refining your search query or selecting another category.</p>
+            <p className="text-sm text-muted mt-1 max-w-md mx-auto">
+              Try refining your search query or selecting another category.
+            </p>
           </div>
         ) : (
           filteredItems.map((pub) => (
@@ -197,20 +199,22 @@ export default function PublicationsPage() {
                       onClick={() => handleView(pub.id)}
                       className="inline-flex items-center gap-1.5 text-xs font-mono text-muted hover:text-primary bg-white border border-border hover:border-primary/40 px-3 py-2 rounded-lg transition-colors"
                     >
-                      <span>View Source</span>
+                      <span>Publisher / DOI</span>
                       <ExternalLink className="w-3.5 h-3.5" />
                     </a>
                   )}
 
-                  <a
-                    href={pub.pdf_url}
-                    download
-                    onClick={() => handleDownload(pub.id)}
-                    className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider rounded-lg btn-signal px-4 py-2"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    Download PDF
-                  </a>
+                  {pub.pdf_url && (
+                    <a
+                      href={pub.pdf_url}
+                      download
+                      onClick={() => handleDownload(pub.id)}
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider rounded-lg btn-signal px-4 py-2"
+                    >
+                      <Download className="w-3.5 h-3.5" />
+                      Download PDF
+                    </a>
+                  )}
                 </div>
               </div>
             </TiltCard>

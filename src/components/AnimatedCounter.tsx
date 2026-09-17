@@ -17,10 +17,11 @@ export function AnimatedCounter({
   prefix = '',
   className = '',
 }: AnimatedCounterProps) {
-  const [displayValue, setDisplayValue] = useState(0)
+  // Start at the real value so SSR / first paint never flash "0+"
+  const [displayValue, setDisplayValue] = useState(value)
   const elementRef = useRef<HTMLSpanElement>(null)
   const started = useRef(false)
-  const displayRef = useRef(0)
+  const displayRef = useRef(value)
   const rafRef = useRef<number | null>(null)
 
   useEffect(() => {
@@ -53,21 +54,29 @@ export function AnimatedCounter({
       rafRef.current = requestAnimationFrame(step)
     }
 
+    // After first paint, animate only when the live value increases.
     if (started.current) {
       animateTo(value, Math.min(duration, 900))
       return
     }
 
     const node = elementRef.current
-    if (!node) return
+    if (!node) {
+      setDisplayValue(value)
+      displayRef.current = value
+      return
+    }
 
     const start = () => {
       if (started.current) return
       started.current = true
+      // Count up from ~70% of target so the number never regresses to 0.
+      const from = Math.max(0, Math.floor(value * 0.7))
+      displayRef.current = from
+      setDisplayValue(from)
       animateTo(value, duration)
     }
 
-    // Already on-screen (common for header counters) — don't wait forever on IO.
     const rect = node.getBoundingClientRect()
     const inView = rect.top < window.innerHeight && rect.bottom > 0
     if (inView) {

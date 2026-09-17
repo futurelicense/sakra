@@ -5,10 +5,10 @@ A high-performance modern web application built from the portfolio specification
 ## Features
 
 - **Hero & Verified Metrics**: Dynamic visitor tracking, years of experience, executed test cases, and analyzed records with real-time incrementing counters.
-- **Career Timeline (`/experience`)**: Filterable timeline across roles (UpSkill Consultancy, TaskInspota, WUST, British IELTS) with quantified achievements and defect tracking metrics.
-- **Research & Publications (`/publications`)**: Peer-reviewed journal papers, IEEE conference papers, and doctoral working papers with abstract viewers and direct PDF downloads.
+- **Career Timeline (`/experience`)**: Filterable timeline across roles (UpSkill Consultancy, Task Impetus Inc., WUST, British IELTS) with quantified achievements and defect tracking metrics.
+- **Research & Publications (`/publications`)**: Verifiable journal publications with publisher/DOI links (no hosted placeholder PDFs).
 - **Free Professional Templates (`/templates`)**: Production-ready QA test case matrices, bug tracking sheets, data validation checklists, and project trackers ready for download.
-- **Interactive Resume (`/resume`)**: Formatted CV with executive summary, competencies, education, and single-click PDF export.
+- **Interactive Resume (`/resume`)**: Formatted CV with executive summary, competencies, education, and print-friendly export.
 - **LinkedIn Hub (`/linkedin`)**: Direct social connections and curated thought leadership previews.
 - **Analytics API (`/api/analytics`)**: Endpoints for tracking page visits, template downloads, publication citations, and resume downloads.
 - **Admin dashboard (`/admin`)**: Live counters for portfolio visits, page views, paper reads, resume/template/PDF downloads, plus a download log with dummy IP addresses (in-memory until Supabase is wired).

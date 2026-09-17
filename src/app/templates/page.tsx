@@ -14,7 +14,7 @@ import { TemplatePreviewModal, TemplatePreviewData } from '@/components/Template
 import { useLiveMetrics } from '@/hooks/useLiveMetrics'
 import { isResourceTemplateId } from '@/lib/templateIds'
 import { registerDownload, triggerFileDownload } from '@/lib/stats'
-import portfolioData from '@/data/portfolio.json'
+import portfolioData from '@/data/portfolio'
 
 function formatCount(value: number | null | undefined) {
   if (typeof value !== 'number') return '—'
@@ -91,9 +91,9 @@ export default function TemplatesPage() {
   }, 0)
 
   const statusLabel = hasLiveCounts && !error
-    ? 'Live from Supabase'
+    ? 'Live counts'
     : loading
-      ? 'Loading live counts...'
+      ? 'Loading counts...'
       : null
 
   return (

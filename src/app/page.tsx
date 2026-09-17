@@ -30,7 +30,7 @@ import { TemplatePreviewModal, TemplatePreviewData } from '@/components/Template
 import { useLiveMetrics } from '@/hooks/useLiveMetrics'
 import { isResourceTemplateId } from '@/lib/templateIds'
 import { registerDownload, triggerFileDownload } from '@/lib/stats'
-import portfolioData from '@/data/portfolio.json'
+import portfolioData from '@/data/portfolio'
 
 export default function HomePage() {
   const { home, owner, free_templates, publications, experience } = portfolioData.portfolio
@@ -133,7 +133,7 @@ export default function HomePage() {
     {
       step: '3',
       title: 'Enterprise Data Quality & Analytics',
-      subtitle: 'TaskInspota Inc. · Data Analyst',
+      subtitle: 'Task Impetus Inc. · Data Analyst',
       icon: <Database className="h-5 w-5" />,
       description:
         'I validated, cleansed, and analyzed 5,000+ records across 20+ datasets. Using SQL, Python, and Excel, I learned how messy raw data creates silent system failures, and how rigorous validation protects critical business decisions.'
@@ -149,10 +149,10 @@ export default function HomePage() {
     {
       step: '5',
       title: 'Doctoral Research & Intelligent Software Reliability',
-      subtitle: 'Doctor of Computer Science (DCS) · University of the Potomac · Started 31 August 2026',
+      subtitle: 'Doctor of Computer Science (DCS) · University of the Potomac · August 2026 – Present',
       icon: <Cpu className="h-5 w-5" />,
       description:
-        'Today, I conduct doctoral research combining machine learning with agile CI/CD pipelines to forecast regression defects before deployment, publishing peer-reviewed research in software engineering.'
+        'Today, I am conducting doctoral and applied research in machine learning, predictive analytics, and intelligent systems for software reliability and quality assurance.'
     }
   ]
 
@@ -172,7 +172,7 @@ export default function HomePage() {
     },
     {
       category: 'Research & Intelligent Systems',
-      tools: ['Doctoral Research', 'Predictive Defect Models', 'CI/CD Pipelines', 'Technical Writing', 'Peer-Reviewed Publishing', 'Agile / Scrum']
+      tools: ['Doctoral Research', 'Predictive Analytics', 'CI/CD Pipelines', 'Technical Writing', 'Intelligent Systems', 'Agile / Scrum']
     }
   ]
 
@@ -248,7 +248,7 @@ export default function HomePage() {
         </p>
 
         <p className="reveal reveal-delay-3 mt-3 max-w-2xl text-base leading-relaxed text-muted/75">
-          Bridging hands-on quality engineering with doctoral research in predictive machine learning for software reliability.
+          Bridging hands-on quality engineering with doctoral research in machine learning, predictive analytics, and intelligent systems.
         </p>
 
         <div className="reveal reveal-delay-4 mt-8 flex flex-wrap items-center gap-3">
@@ -417,7 +417,7 @@ export default function HomePage() {
         />
 
         <div className="grid gap-6 md:grid-cols-2">
-          {/* Card: We Sustain Growth / NSCR */}
+          {/* Card: We Sustain Growth / NSCRS */}
           <TiltCard className="p-6 sm:p-8">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <span className="inline-flex items-center gap-2">
@@ -426,18 +426,18 @@ export default function HomePage() {
                 </span>
                 <span className="eyebrow">We Sustain Growth</span>
               </span>
-              <span className="font-mono text-xs text-muted">Remote · NSCR Platform</span>
+              <span className="font-mono text-xs text-muted">Remote · NSCRS Platform</span>
             </div>
 
             <h3 className="mt-4 font-display text-xl font-bold text-foreground leading-snug">
               AI Capital Readiness Score Validation
             </h3>
             <p className="mt-3 text-sm sm:text-base leading-relaxed text-muted">
-              Validated assessment flows, scoring logic, and founder-facing recommendations for NSCR - an AI-powered platform that evaluates startup funding readiness across investor criteria.
+              Validated assessment flows, scoring logic, and founder-facing recommendations for the National Startup Capital Readiness Scoring (NSCRS) Platform — an AI-powered system that evaluates startup funding readiness using approximately 25 indicators across six areas.
             </p>
 
             <div className="mt-5 pt-4 border-t border-border flex items-center justify-between text-xs font-mono text-primary">
-              <span>5 Readiness Dimensions</span>
+              <span>~25 Indicators · 6 Areas</span>
               <a
                 href="https://wesustaingrowth.com/"
                 target="_blank"
@@ -475,14 +475,14 @@ export default function HomePage() {
             </div>
           </TiltCard>
 
-          {/* Card: TaskInspota */}
+          {/* Card: Task Impetus */}
           <TiltCard className="p-6 sm:p-8">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <span className="inline-flex items-center gap-2">
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
                   <Database className="h-4 w-4" />
                 </span>
-                <span className="eyebrow">TaskInspota Inc.</span>
+                <span className="eyebrow">Task Impetus Inc.</span>
               </span>
               <span className="font-mono text-xs text-muted">Remote · Analytics</span>
             </div>
@@ -500,27 +500,27 @@ export default function HomePage() {
             </div>
           </TiltCard>
 
-          {/* Card: Publications */}
+          {/* Card: Research */}
           <TiltCard className="p-6 sm:p-8">
             <div className="flex flex-wrap items-center justify-between gap-3">
               <span className="inline-flex items-center gap-2">
                 <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary/10 text-primary border border-primary/20">
                   <BookOpen className="h-4 w-4" />
                 </span>
-                <span className="eyebrow">Scholarly Research</span>
+                <span className="eyebrow">Research & Publications</span>
               </span>
-              <span className="font-mono text-xs text-muted">IJSEQA & IEEE</span>
+              <span className="font-mono text-xs text-muted">6 Journal Articles</span>
             </div>
 
             <h3 className="mt-4 font-display text-xl font-bold text-foreground leading-snug">
-              Machine Learning Defect Prediction in Agile QA
+              Predictive Analytics for Startup Capital & SME Resilience
             </h3>
             <p className="mt-3 text-sm sm:text-base leading-relaxed text-muted">
-              Peer-reviewed research investigating predictive commit classification and code complexity metrics inside CI/CD pipelines to forecast regression defects with an 18% improvement in early defect discovery.
+              Published research on AI-powered predictive analytics for capital optimization, cybersecurity readiness, liquidity management, and national competitiveness in U.S. startup and small-business financing.
             </p>
 
             <div className="mt-5 pt-4 border-t border-border flex items-center justify-between text-xs font-mono text-primary">
-              <span>Peer-Reviewed Journal</span>
+              <span>2024 – 2026</span>
               <Link href="/publications" className="hover:underline flex items-center gap-1">
                 View Publications
                 <ChevronRight className="h-3 w-3" />

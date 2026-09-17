@@ -20,7 +20,7 @@ import {
 } from 'lucide-react'
 import { TiltCard } from '@/components/TiltCard'
 import { LinkedinIcon } from '@/components/Icons'
-import portfolioData from '@/data/portfolio.json'
+import portfolioData from '@/data/portfolio'
 
 export default function ResumePage() {
   const { owner, experience, publications, home } = portfolioData.portfolio
@@ -89,15 +89,26 @@ export default function ResumePage() {
             <span>Print</span>
           </button>
 
-          <a
-            href={owner.resume_url}
-            download
-            onClick={handleDownload}
-            className="inline-flex items-center gap-2 rounded-lg btn-signal h-10 px-5 text-xs font-semibold uppercase tracking-wider"
-          >
-            <Download className="w-4 h-4" />
-            Download PDF
-          </a>
+          {owner.resume_url ? (
+            <a
+              href={owner.resume_url}
+              download
+              onClick={handleDownload}
+              className="inline-flex items-center gap-2 rounded-lg btn-signal h-10 px-5 text-xs font-semibold uppercase tracking-wider"
+            >
+              <Download className="w-4 h-4" />
+              Download PDF
+            </a>
+          ) : (
+            <button
+              type="button"
+              onClick={handlePrint}
+              className="inline-flex items-center gap-2 rounded-lg btn-signal h-10 px-5 text-xs font-semibold uppercase tracking-wider"
+            >
+              <Printer className="w-4 h-4" />
+              Print / Save PDF
+            </button>
+          )}
         </div>
       </div>
 
@@ -170,7 +181,7 @@ export default function ResumePage() {
                 <div className="text-muted text-xs font-mono">University of the Potomac</div>
               </div>
               <span className="text-xs font-mono font-semibold px-2.5 py-1 rounded bg-primary/10 text-primary border border-primary/20 mt-2 sm:mt-0 w-fit">
-                In Progress · Started 31 August 2026
+                August 2026 – Present
               </span>
             </div>
             <div className="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl bg-slate-50 border border-border/40">
@@ -211,7 +222,7 @@ export default function ResumePage() {
             <div className="p-4 rounded-xl bg-slate-50 border border-border/50">
               <strong className="text-foreground block mb-1 font-mono uppercase text-xs text-primary">Operations & Research:</strong>
               <span className="text-muted leading-relaxed">
-                Cross-Functional Team Collaboration, Technical Documentation, Scientific Peer-Reviewed Research Writing
+                Cross-Functional Team Collaboration, Technical Documentation, Doctoral & Applied Research Writing
               </span>
             </div>
           </div>
@@ -253,18 +264,25 @@ export default function ResumePage() {
         <section className="space-y-3">
           <h2 className="text-sm font-mono uppercase tracking-wider text-primary border-b border-border/60 pb-1.5 flex items-center gap-2">
             <Award className="w-4 h-4 text-primary" />
-            Selected Publications & Papers
+            Selected Publications
           </h2>
-          <div className="space-y-3 text-xs sm:text-sm">
-            {publications.items.map((pub) => (
-              <div key={pub.id} className="border-l-2 border-signal/50 pl-4 py-1">
-                <div className="font-display font-semibold text-foreground">{pub.title}</div>
-                <div className="text-muted text-xs font-mono">
-                  {pub.journal_or_conference} ({pub.year}) · {pub.publication_type}
+          {publications.items.length > 0 ? (
+            <div className="space-y-3 text-xs sm:text-sm">
+              {publications.items.map((pub) => (
+                <div key={pub.id} className="border-l-2 border-signal/50 pl-4 py-1">
+                  <div className="font-display font-semibold text-foreground">{pub.title}</div>
+                  <div className="text-muted text-xs font-mono">
+                    {pub.authors.join(', ')}. {pub.journal_or_conference} ({pub.year})
+                    {pub.doi ? ` · DOI: ${pub.doi}` : ''}
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm text-muted leading-relaxed">
+              Conducting doctoral and applied research in machine learning, predictive analytics, and intelligent systems.
+            </p>
+          )}
         </section>
       </div>
     </div>

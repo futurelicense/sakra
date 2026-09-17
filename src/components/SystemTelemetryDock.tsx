@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { Activity, ArrowUp, Copy, Check } from 'lucide-react'
 import { useLiveMetrics } from '@/hooks/useLiveMetrics'
-import portfolioData from '@/data/portfolio.json'
+import portfolioData from '@/data/portfolio'
 
 export function SystemTelemetryDock() {
   const { visits } = useLiveMetrics({ intervalMs: 15000 })
