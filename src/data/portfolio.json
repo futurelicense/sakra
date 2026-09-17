@@ -6,8 +6,9 @@
       "tagline": "Building reliable technology solutions through software testing, data analytics, quality assurance, and technical problem-solving.",
       "location": "Mayhunt Ct, Alexandria, Virginia 22312",
       "email": "admin@wesustaingrowth.com",
-      "linkedin_url": "https://www.linkedin.com/in/sakera-begum",
+      "linkedin_url": "https://www.linkedin.com/in/sakerabegum",
       "github_url": "https://github.com/sakera-begum",
+      "google_scholar_url": "https://scholar.google.com/citations?user=D4t4wxAAAAAJ&hl=en",
       "resume_url": "/downloads/Sakera_Begum_Resume.pdf"
     },
     "navigation": [
@@ -44,7 +45,7 @@
         },
         "tertiary_cta": {
           "label": "Connect on LinkedIn",
-          "target": "https://www.linkedin.com/in/sakera-begum"
+          "target": "https://www.linkedin.com/in/sakerabegum"
         }
       },
       "metrics": [
@@ -554,10 +555,10 @@
       "page_title": "Connect With Me",
       "headline": "Follow my professional journey on LinkedIn",
       "description": "I share insights and updates around data analytics, software quality assurance, information technology, research, professional development, and projects I am working on.",
-      "profile_url": "https://www.linkedin.com/in/sakera-begum",
+      "profile_url": "https://www.linkedin.com/in/sakerabegum",
       "cta": {
         "label": "Connect on LinkedIn",
-        "target": "https://www.linkedin.com/in/sakera-begum"
+        "target": "https://www.linkedin.com/in/sakerabegum"
       },
       "featured_posts": [
         {
@@ -565,21 +566,21 @@
           "category": "Professional Insight",
           "title": "Software Quality Assurance",
           "description": "Insights related to testing, QA processes, software reliability, and technology delivery.",
-          "url": "https://www.linkedin.com/in/sakera-begum"
+          "url": "https://www.linkedin.com/in/sakerabegum"
         },
         {
           "id": "linkedin-post-2",
           "category": "Research Update",
           "title": "Research & Publications",
           "description": "Updates on research, publications, academic work, and professional learning.",
-          "url": "https://www.linkedin.com/in/sakera-begum"
+          "url": "https://www.linkedin.com/in/sakerabegum"
         },
         {
           "id": "linkedin-post-3",
           "category": "Professional Journey",
           "title": "Career & Project Updates",
           "description": "Updates on career development, technology projects, analytics, and professional milestones.",
-          "url": "https://www.linkedin.com/in/sakera-begum"
+          "url": "https://www.linkedin.com/in/sakerabegum"
         }
       ]
     },
@@ -755,8 +756,9 @@
         }
       ],
       "social_links": {
-        "linkedin": "https://www.linkedin.com/in/sakera-begum",
+        "linkedin": "https://www.linkedin.com/in/sakerabegum",
         "github": "https://github.com/sakera-begum",
+        "google_scholar": "https://scholar.google.com/citations?user=D4t4wxAAAAAJ&hl=en",
         "email": "mailto:admin@wesustaingrowth.com"
       },
       "show_website_visits": true,

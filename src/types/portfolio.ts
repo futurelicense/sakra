@@ -8,6 +8,7 @@ export interface PortfolioData {
       email: string
       linkedin_url: string
       github_url: string
+      google_scholar_url: string
       resume_url: string
     }
     navigation: {
@@ -200,6 +201,7 @@ export interface PortfolioData {
       social_links: {
         linkedin: string
         github: string
+        google_scholar: string
         email: string
       }
       show_website_visits: boolean

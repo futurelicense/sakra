@@ -127,9 +127,23 @@ export default function ResumePage() {
               rel="noopener noreferrer"
               className="text-primary hover:underline"
             >
-              linkedin.com/in/sakera-begum
+              linkedin.com/in/sakerabegum
             </a>
           </div>
+
+          {owner.google_scholar_url && (
+            <div className="flex items-center gap-2">
+              <GraduationCap className="w-4 h-4 text-primary" />
+              <a
+                href={owner.google_scholar_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:underline"
+              >
+                Google Scholar
+              </a>
+            </div>
+          )}
         </div>
 
         {/* Executive Summary */}

@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Eye, ShieldCheck, Mail } from 'lucide-react'
+import { Eye, ShieldCheck, Mail, GraduationCap } from 'lucide-react'
 import { LinkedinIcon, GithubIcon } from '@/components/Icons'
 import { useLiveMetrics } from '@/hooks/useLiveMetrics'
 import portfolioData from '@/data/portfolio.json'
@@ -82,6 +82,19 @@ export function Footer() {
                   >
                     <GithubIcon className="w-4 h-4" />
                     GitHub
+                  </a>
+                </li>
+              )}
+              {owner.google_scholar_url && (
+                <li>
+                  <a
+                    href={owner.google_scholar_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-muted hover:text-primary transition-colors"
+                  >
+                    <GraduationCap className="w-4 h-4 text-primary" />
+                    Google Scholar
                   </a>
                 </li>
               )}
